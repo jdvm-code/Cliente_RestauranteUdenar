@@ -4,24 +4,26 @@ using System.Text;
 
 namespace RestauranteUdenar.Models
 {
-    public class EstadoBeca
+//#[Fillable(['status'])]
+
+    public class EstadoReserva
     {
-        //#[Fillable(['status'])]
         public int Id { get; set; }
         public string Status { get; set; }
     }
 
-    public class EstadoBecaRequest
+    public class EstadoReservaRequest
     {
         public string status { get; set; }
     }
 
-    public class EstadoBecaResponse
+    public class EstadoReservaResponse
     {
         public bool success { get; set; }
         public string message { get; set; }
         public string error { get; set; }
-        public EstadoBeca estadoBeca { get; set; }
+        public EstadoReserva estadoReserva { get; set; }
 
     }
+
 }

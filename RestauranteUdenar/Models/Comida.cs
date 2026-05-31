@@ -10,4 +10,17 @@ namespace RestauranteUdenar.Models
         public int Id { get; set; }
         public string Tipo { get; set; }
     }
+
+    public class ComidaRequest
+    {
+        public string Tipo { get; set; }
+    }
+
+    public class ComidaResponse
+    {
+        public bool success { get; set; }
+        public string message { get; set; }
+        public string error { get; set; }
+        public Comida Data { get; set; }
+    }
 }
