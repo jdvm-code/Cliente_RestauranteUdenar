@@ -9,10 +9,11 @@ namespace RestauranteUdenar.Controllers
     {
         private readonly ComidaRepository _comidaRepository;
 
-        public ComidaController(ComidaRepository comidaRepository)
+        public ComidaController()
         {
-            _comidaRepository = comidaRepository;
+            _comidaRepository = new ComidaRepository();
         }
+
 
         public async Task<(bool exito, string mensaje)> StoreComidaAsync(string status)
         {
@@ -40,7 +41,6 @@ namespace RestauranteUdenar.Controllers
             {
                 return (false, ex.Message, null);
             }
-
 
         }
 

@@ -10,9 +10,9 @@ namespace RestauranteUdenar.Controllers
     {
         private readonly BecaRepository _becaRepository;
 
-        public BecaController(BecaRepository becaRepository)
+        public BecaController()
         {
-            _becaRepository = becaRepository;
+            _becaRepository=new BecaRepository();
         }
 
         public async Task<(bool exito, string mensaje)> StoreBecaAsync(BecaRequest request)
@@ -43,13 +43,13 @@ namespace RestauranteUdenar.Controllers
             }
         }
 
-        public async Task<(bool exito, string mensaje, Beca beca)> GetBecaByUserIdAsync(int userId)
+        public async Task<(bool exito, string mensaje, Beca beca)> GetBecaByUserIdAsync(int user_id)
         {
             try
             {
-                var json = await _becaRepository.GetBecaByUserIdAsync(userId);
+                var json = await _becaRepository.GetBecaByUserIdAsync(user_id);
                 var response = Newtonsoft.Json.JsonConvert.DeserializeObject<BecaResponse>(json);
-                return (response.success, response.message, response.Data);
+                return (response.success, response.message, response.beca);
             }
             catch (Exception ex)
             {

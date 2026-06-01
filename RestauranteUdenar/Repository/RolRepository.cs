@@ -12,7 +12,6 @@ namespace RestauranteUdenar.Repository
         private readonly HttpClient _client;
         private readonly string _baseUrl;
 
-
         public RolRepository(string baseUrl = "http://127.0.0.1:8000/api")
         {
             _baseUrl = baseUrl;
@@ -20,35 +19,51 @@ namespace RestauranteUdenar.Repository
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
-        public async Task<string> StoreRolAsync(string name, string short_name)
+        private void SetAuthHeader() =>
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", Properties.Settings.Default.AuthToken);
+
+        public async Task<string> GetRolesAsync()
         {
-            var request = new RoleRequest { Name = name, ShortName = short_name };
-            var json = JsonConvert.SerializeObject(request);
+            SetAuthHeader();
+            return await _client.GetStringAsync($"{_baseUrl}/roles");
+        }
+
+        public async Task<string> StoreRolAsync(string nombre, string shortName)
+        {
+            SetAuthHeader();
+            var body = new { nombre };
+            var json = JsonConvert.SerializeObject(body);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync($"{_baseUrl}/roles", content);
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> GetRolesAsync()
+        public async Task<string> UpdateRolAsync(int id, string nombre)
         {
-            var response = await _client.GetAsync($"{_baseUrl}/roles");
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> UpdateRolAsync(string id, string name, string short_name)
-        {
-            var request = new RoleRequest { Name = name, ShortName = short_name };
-            var json = JsonConvert.SerializeObject(request);
+            SetAuthHeader();
+            var body = new { nombre };
+            var json = JsonConvert.SerializeObject(body);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _client.PutAsync($"{_baseUrl}/roles/{id}", content);
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> DeleteRolAsync(string id)
+        public async Task<string> DeleteRolAsync(int id)
         {
+            SetAuthHeader();
             var response = await _client.DeleteAsync($"{_baseUrl}/roles/{id}");
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        // POST /roles/{id}/asignar-permiso
+        public async Task<string> AsignarPermisoAsync(int rolId, int permisoId)
+        {
+            SetAuthHeader();
+            var body = new { permiso_id = permisoId };
+            var json = JsonConvert.SerializeObject(body);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{_baseUrl}/roles/{rolId}/asignar-permiso", content);
             return await response.Content.ReadAsStringAsync();
         }
     }

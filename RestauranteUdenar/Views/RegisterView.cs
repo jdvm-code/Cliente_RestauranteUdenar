@@ -69,8 +69,8 @@ namespace RestauranteUdenar.Views
 
             if (rolSeleccionado != null)
             {
-                int rolId = rolSeleccionado.Id;
-                string rolName = rolSeleccionado.Name;
+                int rolId = rolSeleccionado.id;
+                string rolName = rolSeleccionado.name;
 
                 MessageBox.Show($"Rol seleccionado: {rolName} (ID: {rolId})");
             }

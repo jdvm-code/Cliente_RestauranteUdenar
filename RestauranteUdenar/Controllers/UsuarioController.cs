@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 public class UsuarioController
 {
@@ -19,13 +20,13 @@ public class UsuarioController
     }
 
     //registro: llama Repository → devuelve resultado
-    public async Task<(bool exito, string mensaje)> RegistrarAsync(string name, string email, string password,string role)
+    public async Task<(bool exito, string mensaje)> RegistrarAsync(RegisterRequest request)
     {
         try
         {
-            var json = await _repository.RegisterAsync(name, email, password, role);
-            var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-            return (response.status, response.message);
+            var json = await _repository.RegisterAsync(request);
+            var response = JsonConvert.DeserializeObject<RegisterResponse>(json);
+            return (response.success, response.message);
         }
         catch (Exception ex)
         {
@@ -38,20 +39,19 @@ public class UsuarioController
     {
         try
         {
-            var response = await _repository.LoginAsync(email, password);
-
-            if (response.success && !string.IsNullOrEmpty(response.token))
+            var json = await _repository.LoginAsync(email, password);
+            var response = JsonConvert.DeserializeObject<LoginResponse>(json);
+            bool esExitoso = response.success == "true" || response.success == "True";
+            if (esExitoso)
             {
-                // Guardar token (como FavoritosManager guarda favoritos)
                 TokenStorage.SaveToken(response.token);
-
-                // Guardar en sesión en memoria
-                Session.UsuarioActual = response.user;
-
-                return (true, $"Bienvenido {response.user.name}");
+                TokenStorage.SaveUserId(response.user.id);
+                return (true, "Login exitoso");
             }
-
-            return (false, response.message);
+            else
+            {
+                return (false, response.message);
+            }
         }
         catch (Exception ex)
         {
@@ -61,7 +61,7 @@ public class UsuarioController
 
     public async Task<string> ListarUsuariosAsync()
     {
-        var token = Session.Token;
+        var token = TokenStorage.GetToken();
         return await _repository.GetUsuariosAsync(token);
     }
 
@@ -69,15 +69,14 @@ public class UsuarioController
     {
         try
         {
-            var token = Session.Token;
+            var token = TokenStorage.GetToken();
             if (!string.IsNullOrEmpty(token))
             {
-                await _repository.LogoutAsync(token); // ← Llamada API
+                await _repository.LogoutAsync(token); 
             }
         }
         catch
         {
-            // Si falla la API, igual limpiamos local
         }
         finally
         {
@@ -86,3 +85,4 @@ public class UsuarioController
     }
 
 }
+

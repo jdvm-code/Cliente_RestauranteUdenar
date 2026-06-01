@@ -20,7 +20,7 @@ namespace RestauranteUdenar.Repository
 
         public async Task<string> StorePermisoAsync(string name, string short_name)
         {
-            var request = new PermisoRequest { Name = name, ShortName = short_name };
+            var request = new PermisoRequest { name = name, short_name = short_name };
             var json = JsonConvert.SerializeObject(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync($"{_baseUrl}/permisos", content);
@@ -36,7 +36,7 @@ namespace RestauranteUdenar.Repository
 
         public async Task<string> UpdatePermisoAsync(int id, string name, string short_name)
         {
-            var request = new PermisoRequest { Name = name, ShortName = short_name };
+            var request = new PermisoRequest { name = name, short_name = short_name };
             var json = JsonConvert.SerializeObject(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _client.PutAsync($"{_baseUrl}/permisos/{id}", content);

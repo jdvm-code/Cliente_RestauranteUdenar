@@ -7,8 +7,8 @@ namespace RestauranteUdenar.Models
     public class EstadoBeca
     {
         //#[Fillable(['status'])]
-        public int Id { get; set; }
-        public string Status { get; set; }
+        public int id { get; set; }
+        public string status { get; set; }
     }
 
     public class EstadoBecaRequest

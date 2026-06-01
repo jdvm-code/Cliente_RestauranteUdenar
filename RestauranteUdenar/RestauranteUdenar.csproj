@@ -39,4 +39,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Admin_UserControls\" />
+  </ItemGroup>
+
 </Project>

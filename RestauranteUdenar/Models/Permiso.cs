@@ -7,16 +7,16 @@ namespace RestauranteUdenar.Models
     public class Permiso
     {
         //#[Fillable(['name', 'short_name'])]
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string ShortName { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string short_name { get; set; }
 
     }
 
     public class PermisoRequest
     {
-        public string Name { get; set; }
-        public string ShortName { get; set; }
+        public string name { get; set; }
+        public string short_name { get; set; }
     }
 
     public class PermisoResponse

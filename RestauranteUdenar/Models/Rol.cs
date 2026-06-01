@@ -6,15 +6,15 @@ namespace RestauranteUdenar.Models
 {
     public class Rol
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string ShortName { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public string short_name { get; set; }
     }
 
     public class RoleRequest
     {
-        public string Name { get; set; }    
-        public string ShortName { get; set; }
+        public string name { get; set; }    
+        public string short_name { get; set; }
     }
 
     public class RolResponse

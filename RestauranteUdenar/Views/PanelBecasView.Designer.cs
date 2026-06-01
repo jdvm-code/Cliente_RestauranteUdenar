@@ -33,7 +33,6 @@
             btn_cambiarContraseña = new Button();
             btn_miCodigo = new Button();
             btn_hacerReserva = new Button();
-            btn_Dashboard = new Button();
             panel3 = new Panel();
             label5 = new Label();
             lblBienvenida = new Label();
@@ -57,18 +56,18 @@
             // 
             // panelSidebar
             // 
+            panelSidebar.BackColor = Color.FromArgb(0, 150, 64);
             panelSidebar.Controls.Add(btn_cerrarSesion);
             panelSidebar.Controls.Add(btn_cambiarContraseña);
             panelSidebar.Controls.Add(btn_miCodigo);
             panelSidebar.Controls.Add(btn_hacerReserva);
-            panelSidebar.Controls.Add(btn_Dashboard);
             panelSidebar.Controls.Add(panel3);
             panelSidebar.Controls.Add(panel2);
             panelSidebar.Dock = DockStyle.Left;
             panelSidebar.Location = new Point(0, 0);
             panelSidebar.Name = "panelSidebar";
             panelSidebar.Padding = new Padding(5);
-            panelSidebar.Size = new Size(220, 472);
+            panelSidebar.Size = new Size(250, 472);
             panelSidebar.TabIndex = 0;
             // 
             // btn_cerrarSesion
@@ -81,10 +80,10 @@
             btn_cerrarSesion.ForeColor = SystemColors.Control;
             btn_cerrarSesion.Image = Properties.Resources.dashboard_icon_1829891;
             btn_cerrarSesion.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_cerrarSesion.Location = new Point(5, 335);
+            btn_cerrarSesion.Location = new Point(5, 281);
             btn_cerrarSesion.Name = "btn_cerrarSesion";
             btn_cerrarSesion.Padding = new Padding(15, 10, 15, 10);
-            btn_cerrarSesion.Size = new Size(210, 54);
+            btn_cerrarSesion.Size = new Size(240, 54);
             btn_cerrarSesion.TabIndex = 8;
             btn_cerrarSesion.Text = "Cerrar sesión";
             btn_cerrarSesion.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -101,10 +100,10 @@
             btn_cambiarContraseña.ForeColor = SystemColors.Control;
             btn_cambiarContraseña.Image = Properties.Resources.dashboard_icon_1829891;
             btn_cambiarContraseña.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_cambiarContraseña.Location = new Point(5, 281);
+            btn_cambiarContraseña.Location = new Point(5, 227);
             btn_cambiarContraseña.Name = "btn_cambiarContraseña";
             btn_cambiarContraseña.Padding = new Padding(15, 10, 15, 10);
-            btn_cambiarContraseña.Size = new Size(210, 54);
+            btn_cambiarContraseña.Size = new Size(240, 54);
             btn_cambiarContraseña.TabIndex = 7;
             btn_cambiarContraseña.Text = "Cambiar contraseña";
             btn_cambiarContraseña.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -121,10 +120,10 @@
             btn_miCodigo.ForeColor = SystemColors.Control;
             btn_miCodigo.Image = Properties.Resources.dashboard_icon_1829891;
             btn_miCodigo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_miCodigo.Location = new Point(5, 227);
+            btn_miCodigo.Location = new Point(5, 173);
             btn_miCodigo.Name = "btn_miCodigo";
             btn_miCodigo.Padding = new Padding(15, 10, 15, 10);
-            btn_miCodigo.Size = new Size(210, 54);
+            btn_miCodigo.Size = new Size(240, 54);
             btn_miCodigo.TabIndex = 6;
             btn_miCodigo.Text = "Mi codigo";
             btn_miCodigo.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -141,35 +140,15 @@
             btn_hacerReserva.ForeColor = SystemColors.Control;
             btn_hacerReserva.Image = Properties.Resources.dashboard_icon_1829891;
             btn_hacerReserva.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_hacerReserva.Location = new Point(5, 173);
+            btn_hacerReserva.Location = new Point(5, 119);
             btn_hacerReserva.Name = "btn_hacerReserva";
             btn_hacerReserva.Padding = new Padding(15, 10, 15, 10);
-            btn_hacerReserva.Size = new Size(210, 54);
+            btn_hacerReserva.Size = new Size(240, 54);
             btn_hacerReserva.TabIndex = 5;
             btn_hacerReserva.Text = "Hacer reserva";
             btn_hacerReserva.TextImageRelation = TextImageRelation.ImageBeforeText;
             btn_hacerReserva.UseVisualStyleBackColor = false;
             btn_hacerReserva.Click += btn_hacerReserva_Click;
-            // 
-            // btn_Dashboard
-            // 
-            btn_Dashboard.BackColor = Color.Transparent;
-            btn_Dashboard.Dock = DockStyle.Top;
-            btn_Dashboard.FlatAppearance.BorderSize = 0;
-            btn_Dashboard.FlatStyle = FlatStyle.Flat;
-            btn_Dashboard.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_Dashboard.ForeColor = SystemColors.Control;
-            btn_Dashboard.Image = Properties.Resources.dashboard_icon_1829891;
-            btn_Dashboard.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Dashboard.Location = new Point(5, 119);
-            btn_Dashboard.Name = "btn_Dashboard";
-            btn_Dashboard.Padding = new Padding(15, 10, 15, 10);
-            btn_Dashboard.Size = new Size(210, 54);
-            btn_Dashboard.TabIndex = 4;
-            btn_Dashboard.Text = "Dashboard";
-            btn_Dashboard.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn_Dashboard.UseVisualStyleBackColor = false;
-            btn_Dashboard.Click += btn_Dashboard_Click;
             // 
             // panel3
             // 
@@ -180,7 +159,7 @@
             panel3.Location = new Point(5, 62);
             panel3.Name = "panel3";
             panel3.Padding = new Padding(2);
-            panel3.Size = new Size(210, 57);
+            panel3.Size = new Size(240, 57);
             panel3.TabIndex = 3;
             // 
             // label5
@@ -226,7 +205,7 @@
             panel2.Location = new Point(5, 5);
             panel2.Name = "panel2";
             panel2.Padding = new Padding(2);
-            panel2.Size = new Size(210, 57);
+            panel2.Size = new Size(240, 57);
             panel2.TabIndex = 0;
             // 
             // label3
@@ -268,17 +247,18 @@
             panelMain.Controls.Add(Panel_UC_Controls);
             panelMain.Controls.Add(panel1);
             panelMain.Dock = DockStyle.Fill;
-            panelMain.Location = new Point(220, 0);
+            panelMain.Location = new Point(250, 0);
             panelMain.Name = "panelMain";
-            panelMain.Size = new Size(677, 472);
+            panelMain.Size = new Size(647, 472);
             panelMain.TabIndex = 1;
             // 
             // Panel_UC_Controls
             // 
+            Panel_UC_Controls.BackColor = Color.FromArgb(245, 247, 250);
             Panel_UC_Controls.Dock = DockStyle.Fill;
             Panel_UC_Controls.Location = new Point(0, 44);
             Panel_UC_Controls.Name = "Panel_UC_Controls";
-            Panel_UC_Controls.Size = new Size(677, 428);
+            Panel_UC_Controls.Size = new Size(647, 428);
             Panel_UC_Controls.TabIndex = 1;
             // 
             // panel1
@@ -288,7 +268,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(10);
-            panel1.Size = new Size(677, 44);
+            panel1.Size = new Size(647, 44);
             panel1.TabIndex = 0;
             // 
             // label7
@@ -332,7 +312,6 @@
         private Panel panelMain;
         private Panel panel2;
         private Panel panel1;
-        private Button btn_Dashboard;
         private Panel panel3;
         private PictureBox pictureBox2;
         private PictureBox pictureBox1;

@@ -19,29 +19,31 @@ namespace RestauranteUdenar.Views
         {
             InitializeComponent();
             _controller = new UsuarioController();
+            txtEmail.Text = "juan.perez@udenar.edu.co";
+            txtPassword.Text = "123456789";
+
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
-            btnLogin.Enabled = false;
-
-            var (exito, mensaje) = await _controller.LoginAsync(txtEmail.Text, txtPassword.Text);
-
-            if (exito)
+            string email = txtEmail.Text;
+            string password = txtPassword.Text;
+            _controller.LoginAsync(email, password);
             {
-                MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Abrir MainForm (como Form1 abre otra vista)
-                var main = new PanelBecasView();
-                main.Show();
-                this.Hide();
+                (bool exito, string mensaje) = await _controller.LoginAsync(email, password);
+                if (exito)
+                {
+                    Form vista = new PanelBecasView();
+                    vista.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show(mensaje, "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else
-            {
-                MessageBox.Show(mensaje);
-            }
 
-            btnLogin.Enabled = true;
+
         }
 
         private void LoginView_FormClosing_1(object sender, FormClosingEventArgs e)

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
+using RestauranteUdenar.Properties;
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace RestauranteUdenar.Repository
@@ -17,44 +19,57 @@ namespace RestauranteUdenar.Repository
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
-        public async Task<string> StoreReservaAsync(int becas_id, int horario_id, int estados_resevas_id,
-            DateTime fecha_registro, DateTime fecha_reserva)
+        private void SetAuthHeader()
         {
-            var request = new ReservaRequest
+            var token = TokenStorage.GetToken(); // Usa TokenStorage en lugar de Settings
+            if (!string.IsNullOrEmpty(token))
             {
-                Becas_id = becas_id,
-                Horario_id = horario_id,
-                Estados_reservas_id = estados_resevas_id,
-                Fecha_registro = fecha_registro,
-                Fecha_reserva = fecha_reserva
-            };
+                _client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+        public async Task<string> StoreReservaAsync(ReservaRequest request)
+        {
+            SetAuthHeader();
+
             var json = JsonConvert.SerializeObject(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_baseUrl}/reservas", content);
+            var response = await _client.PostAsync($"{_baseUrl}/reserva", content);
             return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<string> GetReservasAsync()
         {
-            var response = await _client.GetAsync($"{_baseUrl}/reservas");
+            SetAuthHeader();
+            var response = await _client.GetAsync($"{_baseUrl}/reserva");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task<string> GetReservaByIdAsync(int id)
+        {
+            SetAuthHeader();
+            var response = await _client.GetAsync($"{_baseUrl}/reserva/{id}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<string> UpdateReservaAsync(int estados_resevas_id, int id)
         {
+            SetAuthHeader();
             var request = new ReservaRequest
             {
-                Estados_reservas_id = estados_resevas_id,
+                estados_reservas_id = estados_resevas_id,
             };
             var json = JsonConvert.SerializeObject(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_baseUrl}/reservas/{id}", content);
+            var response = await _client.PutAsync($"{_baseUrl}/reserva/{id}", content);
             return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<string> VerificarQrAsync(int codigo, int id)
         {
+            SetAuthHeader();
             var request = new ReservaRequest
             {
                 Codigo = codigo.ToString()

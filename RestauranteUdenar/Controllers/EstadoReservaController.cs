@@ -18,7 +18,7 @@ namespace RestauranteUdenar.Controllers
         {
             try
             {
-                var json = await _estadoReservaRepository.StoreEstReservaAsync(status);
+                var json = await _estadoReservaRepository.StoreEstadoReservaAsync(status);
                 var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EstadoReservaResponse>(json);
                 return (true, "Estado de reserva creado exitosamente");
             }
@@ -32,7 +32,7 @@ namespace RestauranteUdenar.Controllers
         {
             try
             {
-                var json = await _estadoReservaRepository.GetEstReservaAsync();
+                var json = await _estadoReservaRepository.GetEstadosReservaAsync();
                 var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.EstadoReserva>>(json);
                 return (true, "Estados de reserva obtenidos exitosamente", response);
             }
@@ -42,11 +42,11 @@ namespace RestauranteUdenar.Controllers
             }
         }
 
-        public async Task<(bool exito, string mensaje)> UpdateEstadoReservaAsync(string id, string status)
+        public async Task<(bool exito, string mensaje)> UpdateEstadoReservaAsync(int id, string status)
         {
             try
             {
-                var json = await _estadoReservaRepository.UpdateEstReservaAsync(id, status);
+                var json = await _estadoReservaRepository.UpdateEstadoReservaAsync(id, status);
                 var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EstadoReservaResponse>(json);
                 return (true, "Estado de reserva actualizado exitosamente");
             }
@@ -56,11 +56,11 @@ namespace RestauranteUdenar.Controllers
             }
         }
 
-        public async Task<(bool exito, string mensaje)> DeleteEstadoReservaAsync(string id)
+        public async Task<(bool exito, string mensaje)> DeleteEstadoReservaAsync(int id)
         {
             try
             {
-                var json = await _estadoReservaRepository.DeleteEstReservaAsync(id);
+                var json = await _estadoReservaRepository.DeleteEstadoReservaAsync(id);
                 var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EstadoReservaResponse>(json);
                 return (true, "Estado de reserva eliminado exitosamente");
             }

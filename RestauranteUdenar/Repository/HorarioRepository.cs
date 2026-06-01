@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
+using RestauranteUdenar.Properties;
 using System;
-using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RestauranteUdenar.Repository
 {
-
     public class HorarioRepository
     {
         private readonly HttpClient _client;
@@ -18,49 +20,102 @@ namespace RestauranteUdenar.Repository
             _client = new HttpClient();
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
-         public async Task<string> StoreHorarioAsync(TimeOnly horario_inicio, TimeOnly hora_fin, int cupo)
-         {
-            var request = new HorarioRequest
+
+        private void AgregarToken()
+        {
+            var token = TokenStorage.GetToken();
+            if (!string.IsNullOrEmpty(token))
             {
-                Hora_inicio = horario_inicio,
-                Hora_fin = hora_fin,
-                Cupo = cupo
-            };
-            var json = JsonConvert.SerializeObject(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_baseUrl}/horarios", content);
-            return await response.Content.ReadAsStringAsync();
-         }
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
 
         public async Task<string> GetHorariosAsync()
         {
-            var response = await _client.GetAsync($"{_baseUrl}/horarios");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            try
+            {
+                AgregarToken();
+
+                var response = await _client.GetAsync($"{_baseUrl}/horario");
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        throw new Exception("Token inválido o expirado. Debe iniciar sesión nuevamente.");
+                    }
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+                }
+
+                // 2. Ahora sí coincide: responseContent es un string y el método retorna Task<string>
+                return responseContent;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error de conexión: {ex.Message}");
+            }
         }
 
-        public async Task<string> UpdateHorarioAsync(TimeOnly hora_inicio, TimeOnly hora_fin, int cupo, int id)
+        public async Task<string> StoreHorarioAsync(string hora_inicio, string hora_fin, int cupo)
         {
+            AgregarToken();
+
             var request = new HorarioRequest
             {
-                Hora_inicio = hora_inicio,
-                Hora_fin = hora_fin,
+                hora_inicio = hora_inicio,
+                hora_fin = hora_fin,
                 Cupo = cupo
             };
             var json = JsonConvert.SerializeObject(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_baseUrl}/horarios/{id}", content);
-            return await response.Content.ReadAsStringAsync();
-        }
-        public async Task<string> DeleteHorarioAsync(int id)
-        {
-            var response = await _client.DeleteAsync($"{_baseUrl}/horarios/{id}");
-            return await response.Content.ReadAsStringAsync();
+            var response = await _client.PostAsync($"{_baseUrl}/horario", content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+            }
+
+            return responseContent;
         }
 
-        internal async Task<string> StoreHorarioAsync(string hora_inicio, string hora_fin)
+        public async Task<string> UpdateHorarioAsync(string hora_inicio, string hora_fin, int cupo, int id)
         {
-            throw new NotImplementedException();
+            AgregarToken();
+
+            var request = new HorarioRequest
+            {
+                hora_inicio = hora_inicio,
+                hora_fin = hora_fin,
+                Cupo = cupo
+            };
+            var json = JsonConvert.SerializeObject(request);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PutAsync($"{_baseUrl}/horario/{id}", content);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+            }
+
+            return responseContent;
+        }
+
+        public async Task<string> DeleteHorarioAsync(int id)
+        {
+            AgregarToken();
+
+            var response = await _client.DeleteAsync($"{_baseUrl}/horario/{id}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+            }
+
+            return responseContent;
         }
     }
 }

@@ -43,12 +43,6 @@ namespace RestauranteUdenar.Views
             _controller = new UsuarioController();
         }
 
-        private void btn_Dashboard_Click(object sender, EventArgs e)
-        {
-            UC_Dashboard vista = new UC_Dashboard();
-            MostrarVista(vista);
-        }
-
         private void MostrarVista(UserControl vistaFormulario)
         {
             Panel_UC_Controls.Controls.Clear();
@@ -59,14 +53,9 @@ namespace RestauranteUdenar.Views
 
         private void PanelBecasView_Load(object sender, EventArgs e)
         {
-            UC_Dashboard vista = new UC_Dashboard();
-            MostrarVista(vista);
-            // Mostrar datos del usuario logueado
             lblBienvenida.Text = $"Usuario: {Session.UsuarioActual?.name}";
 
         }
-
-        //botones del menu lateral
 
         private void btn_hacerReserva_Click(object sender, EventArgs e)
         {
@@ -99,7 +88,7 @@ namespace RestauranteUdenar.Views
         private void ConfigurarBotones()
         {
             // Lista de todos los botones del menú
-            Button[] botones = { btn_Dashboard, btn_hacerReserva, btn_miCodigo,
+            Button[] botones = { btn_hacerReserva, btn_miCodigo,
                     btn_cambiarContraseña, btn_cerrarSesion };
 
             foreach (var btn in botones)
@@ -124,7 +113,7 @@ namespace RestauranteUdenar.Views
             }
 
             // Activar el primer botón por defecto (Dashboard)
-            ActivarBoton(btn_Dashboard);
+            ActivarBoton(btn_hacerReserva);
         }
 
         // Evento CLICK - Aquí se marca el botón como activo (amarillo)
@@ -167,8 +156,7 @@ namespace RestauranteUdenar.Views
         {
             // Lista con todos los botones del menú
             List<Button> listaBotones = new List<Button> {
-        btn_Dashboard,
-    btn_hacerReserva,
+            btn_hacerReserva,
     btn_miCodigo,
     btn_cambiarContraseña,
     btn_cerrarSesion

@@ -1,0 +1,8 @@
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.pdf
+*.md
+graphify-out/
+cache/

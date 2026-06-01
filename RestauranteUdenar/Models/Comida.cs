@@ -7,13 +7,13 @@ namespace RestauranteUdenar.Models
     public class Comida
     {
         //#[Fillable(['tipo'])]
-        public int Id { get; set; }
-        public string Tipo { get; set; }
+        public int id { get; set; }
+        public string tipo { get; set; }
     }
 
     public class ComidaRequest
     {
-        public string Tipo { get; set; }
+        public string tipo { get; set; }
     }
 
     public class ComidaResponse

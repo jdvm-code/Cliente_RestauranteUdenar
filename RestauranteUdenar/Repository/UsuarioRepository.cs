@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RestauranteUdenar.Repository
 {
-    public class UsuarioRepository 
+    public class UsuarioRepository
     {
         private readonly HttpClient _client;
         private readonly string _baseUrl;
@@ -22,73 +22,70 @@ namespace RestauranteUdenar.Repository
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
-        //POST /register
-        public async Task<string> RegisterAsync(string name, string email, string password, string role)
+        //login
+        public async Task<string> LoginAsync(string email, string password)
         {
-            var request = new RegisterRequest { name = name, email = email, password = password, role = role };
+            var body = new {email, password };
+            var json = JsonSerializer.Serialize(body);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync($"{_baseUrl}/login", content);
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        //registro
+        public async Task<string> RegisterAsync(RegisterRequest request)
+        {
             var json = JsonSerializer.Serialize(request);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _client.PostAsync($"{_baseUrl}/register", content);
             return await response.Content.ReadAsStringAsync();
         }
 
-        // POST /login → igual que ConsultarApi() en ApiManagerPoke
-        public async Task<LoginResponse> LoginAsync(string email, string password)
-        {
-            var request = new LoginRequest { email = email, password = password };
-            var json = JsonSerializer.Serialize(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _client.PostAsync($"{_baseUrl}/login", content);
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Error {response.StatusCode}: {responseString}");
-
-            return JsonSerializer.Deserialize < LoginResponse > (responseString,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        }
-
-        // GET /list 
         public async Task<string> GetUsuariosAsync(string token)
         {
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-
-            return await _client.GetStringAsync($"{_baseUrl}/list");
+            return await _client.GetStringAsync($"{_baseUrl}/usuarios");
         }
 
-        // GET buscar por id = /find/{id}
         public async Task<string> GetUsuarioByIdAsync(int id, string token)
         {
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-
-            return await _client.GetStringAsync($"{_baseUrl}/find/{id}");
+            return await _client.GetStringAsync($"{_baseUrl}/usuarios/{id}");
         }
 
-        // PUT /actualizar/{id}
         public async Task<string> UpdateUsuarioAsync(int id, Usuario usuario, string token)
         {
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-
             var json = JsonSerializer.Serialize(usuario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _client.PutAsync($"{_baseUrl}/actualizar/{id}", content);
+            var response = await _client.PutAsync($"{_baseUrl}/usuarios/{id}", content);
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<bool> LogoutAsync(string token)
+        //cambiar contraseña
+        public async Task<string> CambiarPasswordAsync(string passwordActual, string passwordNuevo, string token)
         {
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _client.PostAsync($"{_baseUrl}/logout", null);
-            return response.IsSuccessStatusCode;
+            var body = new { password_actual = passwordActual, password = passwordNuevo };
+            var json = JsonSerializer.Serialize(body);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _client.PutAsync($"{_baseUrl}/cambiar-password", content);
+            return await response.Content.ReadAsStringAsync();
         }
 
+        //logout
+        public async Task<string> LogoutAsync(string token)
+        {
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+            var response = await _client.PostAsync($"{_baseUrl}/logout", null);
+            return await response.Content.ReadAsStringAsync();
 
+
+        }
     }
 }

@@ -11,19 +11,28 @@ namespace RestauranteUdenar.Controllers
     {
         private readonly ReservaRepository _reservaRepository;
 
-        public ReservaController() 
+        public ReservaController()
         {
             _reservaRepository = new ReservaRepository();
         }
 
-        public async Task<(bool exito, string mensaje)> StoreReservaAsync(int becas_id, int horario_id, int estados_resevas_id,
-            DateTime fecha_registro, DateTime fecha_reserva)
+        public ReservaController(ReservaRepository reservaRepository)
+        {
+            if (reservaRepository != null)
+                _reservaRepository = reservaRepository;
+            else
+                _reservaRepository = new ReservaRepository();
+        }
+
+        public async Task<(bool exito, string mensaje)> StoreReservaAsync(ReservaRequest request)
         {
             try
             {
-                var json = await _reservaRepository.StoreReservaAsync(becas_id, horario_id, estados_resevas_id, fecha_registro, fecha_reserva);
+                var json = await _reservaRepository.StoreReservaAsync(request);
                 var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-                return (response.success, response.message);
+                bool esExito = response.status == "success";
+
+                return (esExito, response.message);
             }
             catch (Exception ex)
             {
@@ -31,13 +40,34 @@ namespace RestauranteUdenar.Controllers
             }
         }
 
+        public async Task<(bool exito, string mensaje, Reserva data)> GetReservaByIdAsync(int id)
+        {
+            try
+            {
+                var json = await _reservaRepository.GetReservaByIdAsync(id);
+                var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
+
+                bool esExito = response.status == "success";
+
+                return (esExito, response.message, response.data);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
+
+            
+
         public async Task<(bool exito, string mensaje)> UpdateReservaAsync(int estados_resevas_id, int id)
         {
             try
             {
                 var json = await _reservaRepository.UpdateReservaAsync(estados_resevas_id, id);
                 var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-                return (response.success, response.message);
+                bool esExito = response.status == "success";
+
+                return (esExito, response.message);
             }
             catch (Exception ex)
             {
@@ -51,7 +81,9 @@ namespace RestauranteUdenar.Controllers
             {
                 var json = await _reservaRepository.VerificarQrAsync(estados_resevas_id, id);
                 var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-                return (response.success, response.message);
+                bool esExito = response.status == "success";
+
+                return (esExito, response.message);
             }
             catch (Exception ex)
             {
