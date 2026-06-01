@@ -3,6 +3,7 @@ using RestauranteUdenar.Models;
 using RestauranteUdenar.Properties;
 using System;
 using System.Drawing;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,6 +15,7 @@ namespace RestauranteUdenar.Views.UserControls
         private ReservaController _reservaController;
         private ComidaController _comidaController;
         private BecaController _becaController;
+        private UsuarioController _usuarioController;
 
         public UC_Resevas()
         {
@@ -22,15 +24,21 @@ namespace RestauranteUdenar.Views.UserControls
             _comidaController = new ComidaController();
             _reservaController = new ReservaController();
             _becaController = new BecaController();
+            _usuarioController = new UsuarioController();
 
             CargarHorariosAsync();
             CargarComidasAsync();
 
 
-
-
             int userId = int.Parse(TokenStorage.GetUserId());
             label3.Text = $"Usuario ID: {userId}";
+        }
+
+        public async Task<int> ObtenerIdRoleAsync()
+        {
+            var json = await _usuarioController.meAsync();
+            var response = JsonSerializer.Deserialize<Usuario>(json);
+            return response.role_id;
         }
 
         private async void UC_Resevas_Load(object sender, EventArgs e)
@@ -46,7 +54,6 @@ namespace RestauranteUdenar.Views.UserControls
         {
             try
             {
-                // Llamar al controller
                 var resultado = await _horarioController.GetHorariosAsync();
 
                 if (!resultado.exito)
@@ -55,17 +62,14 @@ namespace RestauranteUdenar.Views.UserControls
                     return;
                 }
 
-                // Limpiar ComboBox
                 combo_horarios.Items.Clear();
 
-                // Verificar que hay horarios
                 if (resultado.horarios == null || resultado.horarios.Count == 0)
                 {
                     MessageBox.Show("No hay horarios disponibles");
                     return;
                 }
 
-                // Llenar el ComboBox
                 foreach (var horario in resultado.horarios)
                 {
                     var item = new ComboBoxItem
@@ -77,7 +81,6 @@ namespace RestauranteUdenar.Views.UserControls
                     combo_horarios.Items.Add(item);
                 }
 
-                // Seleccionar el primero
                 if (combo_horarios.Items.Count > 0)
                 {
                     combo_horarios.SelectedIndex = 0;

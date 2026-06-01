@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelBecasView));
             panelSidebar = new Panel();
             btn_cerrarSesion = new Button();
             btn_cambiarContraseña = new Button();
@@ -78,7 +79,7 @@
             btn_cerrarSesion.FlatStyle = FlatStyle.Flat;
             btn_cerrarSesion.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_cerrarSesion.ForeColor = SystemColors.Control;
-            btn_cerrarSesion.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_cerrarSesion.Image = (Image)resources.GetObject("btn_cerrarSesion.Image");
             btn_cerrarSesion.ImageAlign = ContentAlignment.MiddleLeft;
             btn_cerrarSesion.Location = new Point(5, 281);
             btn_cerrarSesion.Name = "btn_cerrarSesion";
@@ -98,7 +99,7 @@
             btn_cambiarContraseña.FlatStyle = FlatStyle.Flat;
             btn_cambiarContraseña.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_cambiarContraseña.ForeColor = SystemColors.Control;
-            btn_cambiarContraseña.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_cambiarContraseña.Image = (Image)resources.GetObject("btn_cambiarContraseña.Image");
             btn_cambiarContraseña.ImageAlign = ContentAlignment.MiddleLeft;
             btn_cambiarContraseña.Location = new Point(5, 227);
             btn_cambiarContraseña.Name = "btn_cambiarContraseña";
@@ -118,7 +119,7 @@
             btn_miCodigo.FlatStyle = FlatStyle.Flat;
             btn_miCodigo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_miCodigo.ForeColor = SystemColors.Control;
-            btn_miCodigo.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_miCodigo.Image = (Image)resources.GetObject("btn_miCodigo.Image");
             btn_miCodigo.ImageAlign = ContentAlignment.MiddleLeft;
             btn_miCodigo.Location = new Point(5, 173);
             btn_miCodigo.Name = "btn_miCodigo";
@@ -138,7 +139,7 @@
             btn_hacerReserva.FlatStyle = FlatStyle.Flat;
             btn_hacerReserva.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_hacerReserva.ForeColor = SystemColors.Control;
-            btn_hacerReserva.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_hacerReserva.Image = (Image)resources.GetObject("btn_hacerReserva.Image");
             btn_hacerReserva.ImageAlign = ContentAlignment.MiddleLeft;
             btn_hacerReserva.Location = new Point(5, 119);
             btn_hacerReserva.Name = "btn_hacerReserva";
@@ -292,6 +293,7 @@
             Controls.Add(panelSidebar);
             Name = "PanelBecasView";
             Text = "Panel estudiantes";
+            FormClosing += PanelBecasView_FormClosing;
             Load += PanelBecasView_Load;
             panelSidebar.ResumeLayout(false);
             panel3.ResumeLayout(false);

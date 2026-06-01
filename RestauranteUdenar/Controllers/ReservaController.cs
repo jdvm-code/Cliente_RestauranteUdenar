@@ -2,6 +2,7 @@
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Repository;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -57,7 +58,7 @@ namespace RestauranteUdenar.Controllers
             }
         }
 
-            
+
 
         public async Task<(bool exito, string mensaje)> UpdateReservaAsync(int estados_resevas_id, int id)
         {
@@ -88,6 +89,33 @@ namespace RestauranteUdenar.Controllers
             catch (Exception ex)
             {
                 return (false, ex.Message);
+            }
+        }
+
+        public async Task<(bool exito, string mensaje, List<ResevaCodigoResponse> data)> 
+    GetCodigoReservaDia(int becas_id)
+        {
+            try
+            {
+                var json = await _reservaRepository.GetCodigoReservaDia(becas_id);
+
+                // ✅ CORREGIDO: List<<ReservaCodigoResponse> con < > simples
+                var listaCodigos = JsonConvert.DeserializeObject < List < ResevaCodigoResponse >> (json);
+
+                if (listaCodigos == null || listaCodigos.Count == 0)
+                {
+                    return (false, "No hay reservas para hoy", null);
+                }
+
+                return (true, $"{listaCodigos.Count} reserva(s) encontrada(s)", listaCodigos);
+            }
+            catch (JsonException ex)
+            {
+                return (false, $"Error al procesar respuesta: {ex.Message}", null);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
             }
         }
     }

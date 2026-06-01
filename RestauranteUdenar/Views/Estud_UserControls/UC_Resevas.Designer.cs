@@ -33,6 +33,7 @@
             lbl_estado = new Label();
             btn_ConfirmarReserva = new Button();
             panel2 = new Panel();
+            label6 = new Label();
             dateTimePicker1 = new DateTimePicker();
             combo_comida = new ComboBox();
             combo_horarios = new ComboBox();
@@ -40,13 +41,8 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
-            panel3 = new Panel();
-            lbl_almuerzo = new Label();
-            lbl_desayuno = new Label();
-            label6 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -100,6 +96,7 @@
             // panel2
             // 
             panel2.BackColor = Color.FromArgb(224, 224, 224);
+            panel2.Controls.Add(label6);
             panel2.Controls.Add(dateTimePicker1);
             panel2.Controls.Add(combo_comida);
             panel2.Controls.Add(combo_horarios);
@@ -112,6 +109,15 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(310, 428);
             panel2.TabIndex = 9;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(109, 66);
+            label6.Name = "label6";
+            label6.Size = new Size(38, 15);
+            label6.TabIndex = 19;
+            label6.Text = "label6";
             // 
             // dateTimePicker1
             // 
@@ -172,50 +178,11 @@
             label2.TabIndex = 9;
             label2.Text = "Horarios";
             // 
-            // panel3
-            // 
-            panel3.Controls.Add(lbl_almuerzo);
-            panel3.Controls.Add(lbl_desayuno);
-            panel3.Controls.Add(label6);
-            panel3.Location = new Point(376, 102);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(508, 282);
-            panel3.TabIndex = 10;
-            // 
-            // lbl_almuerzo
-            // 
-            lbl_almuerzo.AutoSize = true;
-            lbl_almuerzo.Location = new Point(47, 188);
-            lbl_almuerzo.Name = "lbl_almuerzo";
-            lbl_almuerzo.Size = new Size(38, 15);
-            lbl_almuerzo.TabIndex = 2;
-            lbl_almuerzo.Text = "label7";
-            // 
-            // lbl_desayuno
-            // 
-            lbl_desayuno.AutoSize = true;
-            lbl_desayuno.Location = new Point(47, 109);
-            lbl_desayuno.Name = "lbl_desayuno";
-            lbl_desayuno.Size = new Size(38, 15);
-            lbl_desayuno.TabIndex = 1;
-            lbl_desayuno.Text = "label7";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(39, 27);
-            label6.Name = "label6";
-            label6.Size = new Size(142, 21);
-            label6.TabIndex = 0;
-            label6.Text = "Reservas para hoy";
-            // 
             // UC_Resevas
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 247, 250);
-            Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "UC_Resevas";
@@ -224,8 +191,6 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            panel3.ResumeLayout(false);
-            panel3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -243,9 +208,6 @@
         private Label label3;
         private Label label2;
         private DateTimePicker dateTimePicker1;
-        private Panel panel3;
-        private Label lbl_almuerzo;
-        private Label lbl_desayuno;
         private Label label6;
     }
 }

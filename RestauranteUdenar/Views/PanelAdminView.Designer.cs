@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelAdminView));
             pnl_slidebar = new Panel();
             btn_logoutAdmin = new Button();
             btn_verificarCodigo = new Button();
             btn_reportesAdmin = new Button();
             btn_reservasAdmin = new Button();
-            btn_DashAdm = new Button();
             panel3 = new Panel();
             label5 = new Label();
             lblBienvenida = new Label();
@@ -43,11 +43,15 @@
             label4 = new Label();
             pictureBox1 = new PictureBox();
             Fpnl_UC_Controls = new FlowLayoutPanel();
+            panel1 = new Panel();
+            label7 = new Label();
             pnl_slidebar.SuspendLayout();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            Fpnl_UC_Controls.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // pnl_slidebar
@@ -57,7 +61,6 @@
             pnl_slidebar.Controls.Add(btn_verificarCodigo);
             pnl_slidebar.Controls.Add(btn_reportesAdmin);
             pnl_slidebar.Controls.Add(btn_reservasAdmin);
-            pnl_slidebar.Controls.Add(btn_DashAdm);
             pnl_slidebar.Controls.Add(panel3);
             pnl_slidebar.Controls.Add(panel2);
             pnl_slidebar.Dock = DockStyle.Left;
@@ -75,9 +78,9 @@
             btn_logoutAdmin.FlatStyle = FlatStyle.Flat;
             btn_logoutAdmin.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_logoutAdmin.ForeColor = SystemColors.Control;
-            btn_logoutAdmin.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_logoutAdmin.Image = (Image)resources.GetObject("btn_logoutAdmin.Image");
             btn_logoutAdmin.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_logoutAdmin.Location = new Point(5, 335);
+            btn_logoutAdmin.Location = new Point(5, 281);
             btn_logoutAdmin.Name = "btn_logoutAdmin";
             btn_logoutAdmin.Padding = new Padding(15, 10, 15, 10);
             btn_logoutAdmin.Size = new Size(240, 54);
@@ -85,6 +88,7 @@
             btn_logoutAdmin.Text = "Cerrar sesión";
             btn_logoutAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
             btn_logoutAdmin.UseVisualStyleBackColor = false;
+            btn_logoutAdmin.Click += btn_logoutAdmin_Click;
             // 
             // btn_verificarCodigo
             // 
@@ -94,9 +98,9 @@
             btn_verificarCodigo.FlatStyle = FlatStyle.Flat;
             btn_verificarCodigo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_verificarCodigo.ForeColor = SystemColors.Control;
-            btn_verificarCodigo.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_verificarCodigo.Image = (Image)resources.GetObject("btn_verificarCodigo.Image");
             btn_verificarCodigo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_verificarCodigo.Location = new Point(5, 281);
+            btn_verificarCodigo.Location = new Point(5, 227);
             btn_verificarCodigo.Name = "btn_verificarCodigo";
             btn_verificarCodigo.Padding = new Padding(15, 10, 15, 10);
             btn_verificarCodigo.Size = new Size(240, 54);
@@ -104,6 +108,7 @@
             btn_verificarCodigo.Text = "Verificar Código";
             btn_verificarCodigo.TextImageRelation = TextImageRelation.ImageBeforeText;
             btn_verificarCodigo.UseVisualStyleBackColor = false;
+            btn_verificarCodigo.Click += btn_verificarCodigo_Click;
             // 
             // btn_reportesAdmin
             // 
@@ -113,9 +118,9 @@
             btn_reportesAdmin.FlatStyle = FlatStyle.Flat;
             btn_reportesAdmin.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_reportesAdmin.ForeColor = SystemColors.Control;
-            btn_reportesAdmin.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_reportesAdmin.Image = (Image)resources.GetObject("btn_reportesAdmin.Image");
             btn_reportesAdmin.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_reportesAdmin.Location = new Point(5, 227);
+            btn_reportesAdmin.Location = new Point(5, 173);
             btn_reportesAdmin.Name = "btn_reportesAdmin";
             btn_reportesAdmin.Padding = new Padding(15, 10, 15, 10);
             btn_reportesAdmin.Size = new Size(240, 54);
@@ -123,6 +128,7 @@
             btn_reportesAdmin.Text = "Reportes";
             btn_reportesAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
             btn_reportesAdmin.UseVisualStyleBackColor = false;
+            btn_reportesAdmin.Click += btn_reportesAdmin_Click;
             // 
             // btn_reservasAdmin
             // 
@@ -132,9 +138,9 @@
             btn_reservasAdmin.FlatStyle = FlatStyle.Flat;
             btn_reservasAdmin.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_reservasAdmin.ForeColor = SystemColors.Control;
-            btn_reservasAdmin.Image = Properties.Resources.dashboard_icon_1829891;
+            btn_reservasAdmin.Image = (Image)resources.GetObject("btn_reservasAdmin.Image");
             btn_reservasAdmin.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_reservasAdmin.Location = new Point(5, 173);
+            btn_reservasAdmin.Location = new Point(5, 119);
             btn_reservasAdmin.Name = "btn_reservasAdmin";
             btn_reservasAdmin.Padding = new Padding(15, 10, 15, 10);
             btn_reservasAdmin.Size = new Size(240, 54);
@@ -142,25 +148,7 @@
             btn_reservasAdmin.Text = "Gestión Reservas";
             btn_reservasAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
             btn_reservasAdmin.UseVisualStyleBackColor = false;
-            // 
-            // btn_DashAdm
-            // 
-            btn_DashAdm.BackColor = Color.Transparent;
-            btn_DashAdm.Dock = DockStyle.Top;
-            btn_DashAdm.FlatAppearance.BorderSize = 0;
-            btn_DashAdm.FlatStyle = FlatStyle.Flat;
-            btn_DashAdm.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_DashAdm.ForeColor = SystemColors.Control;
-            btn_DashAdm.Image = Properties.Resources.dashboard_icon_1829891;
-            btn_DashAdm.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_DashAdm.Location = new Point(5, 119);
-            btn_DashAdm.Name = "btn_DashAdm";
-            btn_DashAdm.Padding = new Padding(15, 10, 15, 10);
-            btn_DashAdm.Size = new Size(240, 54);
-            btn_DashAdm.TabIndex = 6;
-            btn_DashAdm.Text = "Dashboard";
-            btn_DashAdm.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn_DashAdm.UseVisualStyleBackColor = false;
+            btn_reservasAdmin.Click += btn_reservasAdmin_Click;
             // 
             // panel3
             // 
@@ -256,11 +244,34 @@
             // 
             // Fpnl_UC_Controls
             // 
+            Fpnl_UC_Controls.Controls.Add(panel1);
             Fpnl_UC_Controls.Dock = DockStyle.Fill;
             Fpnl_UC_Controls.Location = new Point(250, 0);
             Fpnl_UC_Controls.Name = "Fpnl_UC_Controls";
             Fpnl_UC_Controls.Size = new Size(771, 564);
             Fpnl_UC_Controls.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(label7);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(3, 3);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(10);
+            panel1.Size = new Size(647, 44);
+            panel1.TabIndex = 1;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Dock = DockStyle.Left;
+            label7.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.ForeColor = Color.FromArgb(10, 25, 47);
+            label7.Location = new Point(10, 10);
+            label7.Name = "label7";
+            label7.Size = new Size(153, 25);
+            label7.TabIndex = 1;
+            label7.Text = "Panel Estudiante";
             // 
             // PanelAdminView
             // 
@@ -279,6 +290,9 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            Fpnl_UC_Controls.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -294,10 +308,11 @@
         private Label label3;
         private Label label4;
         private PictureBox pictureBox1;
-        private Button btn_DashAdm;
         private Button btn_logoutAdmin;
         private Button btn_verificarCodigo;
         private Button btn_reportesAdmin;
         private Button btn_reservasAdmin;
+        private Panel panel1;
+        private Label label7;
     }
 }

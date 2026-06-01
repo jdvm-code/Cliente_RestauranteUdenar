@@ -22,7 +22,6 @@ namespace RestauranteUdenar.Repository
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
-        //login
         public async Task<string> LoginAsync(string email, string password)
         {
             var body = new {email, password };
@@ -32,7 +31,6 @@ namespace RestauranteUdenar.Repository
             return await response.Content.ReadAsStringAsync();
         }
 
-        //registro
         public async Task<string> RegisterAsync(RegisterRequest request)
         {
             var json = JsonSerializer.Serialize(request);
@@ -52,7 +50,7 @@ namespace RestauranteUdenar.Repository
         {
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-            return await _client.GetStringAsync($"{_baseUrl}/usuarios/{id}");
+            return await _client.GetStringAsync($"{_baseUrl}/find/{id}");
         }
 
         public async Task<string> UpdateUsuarioAsync(int id, Usuario usuario, string token)
@@ -77,7 +75,13 @@ namespace RestauranteUdenar.Repository
             return await response.Content.ReadAsStringAsync();
         }
 
-        //logout
+        public async Task<string> meAsync(string token)
+        {
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+            return await _client.GetStringAsync($"{_baseUrl}/me");
+        }
+
         public async Task<string> LogoutAsync(string token)
         {
             _client.DefaultRequestHeaders.Authorization =

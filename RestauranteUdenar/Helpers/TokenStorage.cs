@@ -6,10 +6,6 @@ namespace RestauranteUdenar.Properties
 {
     public static class TokenStorage
     {
-        /// <summary>
-        ///// Guarda el token de autenticación en la configuración de la aplicación.
-        /// </summary>
-        /// <param name="token"></param>
         public static void SaveToken(string token)
         {
             Properties.Settings.Default.AuthToken = token;
@@ -67,6 +63,29 @@ namespace RestauranteUdenar.Properties
         internal static void SaveUserId(object userId)
         {
             throw new NotImplementedException();
+        }
+
+        //becas_id
+        private static int? _becasId;
+
+        public static void SaveBecasId(int becasId)
+        {
+            _becasId = becasId;
+        }
+
+        public static int? GetBecasId()
+        {
+            return _becasId;
+        }
+
+        public static bool HasBecasId()
+        {
+            return _becasId.HasValue;
+        }
+
+        public static void ClearBecasId()
+        {
+            _becasId = null;
         }
 
 

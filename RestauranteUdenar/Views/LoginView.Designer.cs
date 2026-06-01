@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginView));
             pictureBox1 = new PictureBox();
             label4 = new Label();
             lbl_register = new Label();
@@ -41,9 +42,11 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(61, 31);
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(61, 12);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(177, 158);
+            pictureBox1.Size = new Size(177, 177);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 15;
             pictureBox1.TabStop = false;
             // 
@@ -106,9 +109,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(39, 280);
             label1.Name = "label1";
-            label1.Size = new Size(198, 15);
+            label1.Size = new Size(36, 15);
             label1.TabIndex = 8;
-            label1.Text = "Usuario (Cedula, Código Estudiantil)";
+            label1.Text = "Email";
             // 
             // LoginView
             // 
@@ -123,9 +126,11 @@
             Controls.Add(label2);
             Controls.Add(txtEmail);
             Controls.Add(label1);
+            MaximizeBox = false;
             Name = "LoginView";
             Text = "LoginView";
             FormClosing += LoginView_FormClosing_1;
+            Load += LoginView_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();

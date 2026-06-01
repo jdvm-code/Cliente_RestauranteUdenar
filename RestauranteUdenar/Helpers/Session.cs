@@ -26,5 +26,22 @@ namespace RestauranteUdenar.Helpers
             UsuarioActual = null;
             TokenStorage.ClearToken();
         }
+
+        public static int? BecasId
+        {
+            get => TokenStorage.GetBecasId();
+            set
+            {
+                if (value.HasValue)
+                    TokenStorage.SaveBecasId(value.Value);
+                else
+                    TokenStorage.ClearBecasId();
+            }
+        }
+
+        public static bool TieneBecaAsignada()
+        {
+            return TokenStorage.HasBecasId();
+        }
     }
 }

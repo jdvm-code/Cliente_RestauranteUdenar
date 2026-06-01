@@ -6,12 +6,11 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RestauranteUdenar.Views.Estud_UserControls
+namespace RestauranteUdenar.Views.Admin_UserControls
 {
-    public partial class UC_CambiarContraseña : UserControl
-    { 
-
-        public UC_CambiarContraseña()
+    public partial class UC_VerificarCodigo : UserControl
+    {
+        public UC_VerificarCodigo()
         {
             InitializeComponent();
         }

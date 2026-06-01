@@ -53,6 +53,9 @@ namespace RestauranteUdenar.Views
 
         private void PanelBecasView_Load(object sender, EventArgs e)
         {
+            UC_Resevas vista = new UC_Resevas();
+            MostrarVista(vista);
+
             lblBienvenida.Text = $"Usuario: {Session.UsuarioActual?.name}";
 
         }
@@ -187,6 +190,9 @@ namespace RestauranteUdenar.Views
             }
         }
 
-
+        private async void PanelBecasView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           Session.CerrarSesion();
+        }
     }
 }

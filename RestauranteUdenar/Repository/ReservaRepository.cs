@@ -79,5 +79,33 @@ namespace RestauranteUdenar.Repository
             var response = await _client.PostAsync($"{_baseUrl}/verificar-qr", content);
             return await response.Content.ReadAsStringAsync();
         }
+
+        public async Task<string> GetCodigoReservaDia(int becas_id)
+        {
+            try
+            {
+                // ✅ 1. Agregar token de autenticación
+                SetAuthHeader();
+
+                // ✅ 2. Hacer GET con el ID en la URL (sin body)
+                var response = await _client.GetAsync($"{_baseUrl}/api/reservas/codigo-del-dia/{becas_id}");
+
+                // ✅ 3. Verificar respuesta
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
+                }
+
+                // ✅ 4. Retornar JSON crudo para que el controller lo deserialice
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (System.Exception)
+            {
+                throw; // Re-lanzar para que el controller maneje
+            }
+        }
+
+
     }
 }

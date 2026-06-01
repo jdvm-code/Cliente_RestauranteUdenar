@@ -38,5 +38,13 @@ namespace RestauranteUdenar.Models
 
     }
 
+    public class ResevaCodigoResponse
+    {
+        public int comidas_id { get; set; }
+        public string codigo { get; set; }
+    }
+
+
+
 
 }
