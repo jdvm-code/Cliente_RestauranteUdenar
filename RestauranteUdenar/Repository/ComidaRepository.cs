@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Properties;
+using RestauranteUdenar.Responses;
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
@@ -39,24 +40,37 @@ namespace RestauranteUdenar.Repository
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> GetComidaAsync()
+        public async Task<ApiResponse<List<Comida>>> GetIndexComidasAsync()
         {
-            AgregarToken();
-            var response = await _client.GetAsync($"{_baseUrl}/comida");
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                AgregarToken();
+
+                var response = await _client.GetAsync($"{_baseUrl}/comida");
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Token inválido o expirado. Debe iniciar sesión nuevamente.");
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        throw new Exception("Token inválido o expirado. Debe iniciar sesión nuevamente.");
+                    }
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
                 }
-                throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<Comida>>>(responseContent);
+
+                if (apiResponse == null)
+                {
+                    throw new Exception("La respuesta de la API no tiene el formato esperado.");
+                }
+
+                return apiResponse;
             }
-
-            // 2. Ahora sí coincide: responseContent es un string y el método retorna Task<string>
-            return responseContent;
-
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error de conexión: {ex.Message}");
+            }
         }
 
         public void DeleteComida(string tipo)

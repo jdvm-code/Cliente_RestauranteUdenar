@@ -11,37 +11,20 @@ namespace RestauranteUdenar.Helpers
     {
         public static Usuario UsuarioActual { get; set; }
         public static string Token => TokenStorage.GetToken();
-        public static string User_id => TokenStorage.GetUserId(); 
+        public static string User_id => TokenStorage.GetUserId();
+        public static int RoleId { get; set; }
 
-        public static bool EstaLogueado => UsuarioActual != null && TokenStorage.HasToken();
         public static void seLogueo(Usuario usuario, string token)
         {
-            UsuarioActual = usuario;
+            UsuarioActual = usuario;  // ← Aquí está el role_id
             TokenStorage.SaveToken(token);
             TokenStorage.SaveUserId(usuario.id);
         }
-
         public static void CerrarSesion()
         {
             UsuarioActual = null;
             TokenStorage.ClearToken();
         }
 
-        public static int? BecasId
-        {
-            get => TokenStorage.GetBecasId();
-            set
-            {
-                if (value.HasValue)
-                    TokenStorage.SaveBecasId(value.Value);
-                else
-                    TokenStorage.ClearBecasId();
-            }
-        }
-
-        public static bool TieneBecaAsignada()
-        {
-            return TokenStorage.HasBecasId();
-        }
     }
 }

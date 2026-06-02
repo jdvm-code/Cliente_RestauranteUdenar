@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Properties;
+using RestauranteUdenar.Responses;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Text;
@@ -19,93 +21,176 @@ namespace RestauranteUdenar.Repository
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
-        private void SetAuthHeader()
+        private void AgregarToken()
         {
-            var token = TokenStorage.GetToken(); // Usa TokenStorage en lugar de Settings
+            var token = TokenStorage.GetToken();
             if (!string.IsNullOrEmpty(token))
             {
-                _client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
         }
-        public async Task<string> StoreReservaAsync(ReservaRequest request)
-        {
-            SetAuthHeader();
 
-            var json = JsonConvert.SerializeObject(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_baseUrl}/reserva", content);
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> GetReservasAsync()
-        {
-            SetAuthHeader();
-            var response = await _client.GetAsync($"{_baseUrl}/reserva");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> GetReservaByIdAsync(int id)
-        {
-            SetAuthHeader();
-            var response = await _client.GetAsync($"{_baseUrl}/reserva/{id}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> UpdateReservaAsync(int estados_resevas_id, int id)
-        {
-            SetAuthHeader();
-            var request = new ReservaRequest
-            {
-                estados_reservas_id = estados_resevas_id,
-            };
-            var json = JsonConvert.SerializeObject(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_baseUrl}/reserva/{id}", content);
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> VerificarQrAsync(int codigo, int id)
-        {
-            SetAuthHeader();
-            var request = new ReservaRequest
-            {
-                Codigo = codigo.ToString()
-            };
-            var json = JsonConvert.SerializeObject(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_baseUrl}/verificar-qr", content);
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> GetCodigoReservaDia(int becas_id)
+        // GET todas las reservas (con filtros)
+        public async Task<ApiResponse<List<Reserva>>> GetAllReservasAsync(string fecha = null, int? estado = null, int? comida = null)
         {
             try
             {
-                // ✅ 1. Agregar token de autenticación
-                SetAuthHeader();
+                AgregarToken();
 
-                // ✅ 2. Hacer GET con el ID en la URL (sin body)
-                var response = await _client.GetAsync($"{_baseUrl}/api/reservas/codigo-del-dia/{becas_id}");
+                // Construir URL con query params
+                var queryParams = new List< string > ();
+                if (!string.IsNullOrEmpty(fecha)) queryParams.Add($"fecha={fecha}");
+                if (estado.HasValue) queryParams.Add($"estado={estado.Value}");
+                if (comida.HasValue) queryParams.Add($"comida={comida.Value}");
 
-                // ✅ 3. Verificar respuesta
-                if (!response.IsSuccessStatusCode)
+                string url = $"{_baseUrl}/reservas";
+                if (queryParams.Count > 0)
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
+                    url += "?" + string.Join("&", queryParams);
                 }
 
-                // ✅ 4. Retornar JSON crudo para que el controller lo deserialice
-                return await response.Content.ReadAsStringAsync();
+                var response = await _client.GetAsync(url);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+                }
+
+                return JsonConvert.DeserializeObject < ApiResponse < List < Reserva >>> (responseContent);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw; // Re-lanzar para que el controller maneje
+                throw new Exception($"Error: {ex.Message}");
             }
         }
 
+        // PUT confirmar
+        public async Task<ApiResponse<Reserva>> ConfirmarReservaAsync(int reservaId)
+        {
+            try
+            {
+                AgregarToken();
+                var response = await _client.PutAsync($"{_baseUrl}/reservas/{reservaId}/confirmar", null);
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject < ApiResponse < Reserva >> (content);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error: {ex.Message}");
+            }
+        }
+
+        // PUT cancelar
+        public async Task<ApiResponse<Reserva>> CancelarReservaAsync(int reservaId)
+        {
+            try
+            {
+                AgregarToken();
+                var response = await _client.PutAsync($"{_baseUrl}/reservas/{reservaId}/cancelar", null);
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject < ApiResponse < Reserva >> (content);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<List<Reserva>>> GetReservasByUsuarioYFechaAsync(int usuarioId, string fecha)
+        {
+            try
+            {
+                AgregarToken();
+
+                var response = await _client.GetAsync($"{_baseUrl}/reservas/usuario/{usuarioId}/fecha/{fecha}");
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        throw new Exception("Token inválido o expirado.");
+                    }
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+                }
+
+                var apiResponse = JsonConvert.DeserializeObject < ApiResponse < List < Reserva >>> (responseContent);
+
+                if (apiResponse == null)
+                {
+                    throw new Exception("La respuesta de la API no tiene el formato esperado.");
+                }
+
+                return apiResponse;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<Reserva>> CrearReservaAsync(object reservaData)
+        {
+            try
+            {
+                AgregarToken();
+
+                var json = JsonConvert.SerializeObject(reservaData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_baseUrl}/reserva", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        throw new Exception("Token inválido o expirado. Debe iniciar sesión nuevamente.");
+                    }
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+                }
+
+                var apiResponse = JsonConvert.DeserializeObject <ApiResponse < Reserva >> (responseContent);
+
+                if (apiResponse == null)
+                {
+                    throw new Exception("La respuesta de la API no tiene el formato esperado.");
+                }
+
+                return apiResponse;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error de conexión: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<Reserva>> MarcarAsistenciaAsync(string codigo)
+        {
+            try
+            {
+                AgregarToken();
+
+                var body = new { codigo = codigo };
+                var json = JsonConvert.SerializeObject(body);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _client.PostAsync($"{_baseUrl}/reservas/asistencia", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+                }
+
+                return JsonConvert.DeserializeObject < ApiResponse < Reserva >> (responseContent);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error: {ex.Message}");
+            }
+        }
 
     }
 }

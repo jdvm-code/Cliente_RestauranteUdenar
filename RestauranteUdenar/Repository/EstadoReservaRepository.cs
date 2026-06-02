@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using RestauranteUdenar.Helpers;
 using RestauranteUdenar.Models;
+using RestauranteUdenar.Responses;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -17,43 +19,36 @@ namespace RestauranteUdenar.Repository
             _client.Timeout = TimeSpan.FromSeconds(30);
         }
 
-        private void SetAuthHeader() =>
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", Properties.Settings.Default.AuthToken);
-
-        public async Task<string> GetEstadosReservaAsync()
+        private void AgregarToken()
         {
-            SetAuthHeader();
-            var response = await _client.GetAsync($"{_baseUrl}/estado-reserva");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            if (!string.IsNullOrEmpty(Session.Token))
+            {
+                _client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Session.Token);
+            }
         }
 
-        public async Task<string> StoreEstadoReservaAsync(string status)
+        public async Task<ApiResponse<List<EstadoReserva>>> GetEstadosAsync()
         {
-            SetAuthHeader();
-            var body = new { status };
-            var json = JsonConvert.SerializeObject(body);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync($"{_baseUrl}/estado-reserva", content);
-            return await response.Content.ReadAsStringAsync();
-        }
+            try
+            {
+                AgregarToken();
 
-        public async Task<string> UpdateEstadoReservaAsync(int id, string status)
-        {
-            SetAuthHeader();
-            var body = new { status };
-            var json = JsonConvert.SerializeObject(body);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_baseUrl}/estado-reserva/{id}", content);
-            return await response.Content.ReadAsStringAsync();
-        }
+                var response = await _client.GetAsync($"{_baseUrl}/estado-reserva");
+                var responseContent = await response.Content.ReadAsStringAsync();
 
-        public async Task<string> DeleteEstadoReservaAsync(int id)
-        {
-            SetAuthHeader();
-            var response = await _client.DeleteAsync($"{_baseUrl}/estado-reserva/{id}");
-            return await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
+                }
+
+                return JsonConvert.DeserializeObject < ApiResponse < List < EstadoReserva >>> (responseContent);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error: {ex.Message}");
+            }
         }
     }
 }
+

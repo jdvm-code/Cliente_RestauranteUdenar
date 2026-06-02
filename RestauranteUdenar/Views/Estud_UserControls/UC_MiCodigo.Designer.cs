@@ -31,11 +31,12 @@
             panel1 = new Panel();
             label1 = new Label();
             panel2 = new Panel();
-            lbl_codigoAlm = new Label();
-            pictureBox1 = new PictureBox();
-            lbl_codigoDes = new Label();
+            lbl_InfoReserva = new Label();
+            btnCodigoReserva = new Button();
+            lblCodigoReserva = new Label();
             label3 = new Label();
             label2 = new Label();
+            pictureBox1 = new PictureBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -49,7 +50,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(10);
-            panel1.Size = new Size(937, 55);
+            panel1.Size = new Size(972, 55);
             panel1.TabIndex = 7;
             // 
             // label1
@@ -66,79 +67,93 @@
             // 
             // panel2
             // 
-            panel2.BackColor = Color.Silver;
-            panel2.Controls.Add(lbl_codigoAlm);
-            panel2.Controls.Add(pictureBox1);
-            panel2.Controls.Add(lbl_codigoDes);
+            panel2.BackColor = Color.FromArgb(224, 224, 224);
+            panel2.Controls.Add(lbl_InfoReserva);
+            panel2.Controls.Add(btnCodigoReserva);
+            panel2.Controls.Add(lblCodigoReserva);
             panel2.Controls.Add(label3);
             panel2.Controls.Add(label2);
             panel2.ForeColor = Color.Gray;
             panel2.Location = new Point(43, 81);
             panel2.Name = "panel2";
-            panel2.Size = new Size(309, 478);
+            panel2.Size = new Size(525, 486);
             panel2.TabIndex = 8;
             // 
-            // lbl_codigoAlm
+            // lbl_InfoReserva
             // 
-            lbl_codigoAlm.AutoSize = true;
-            lbl_codigoAlm.ForeColor = Color.Black;
-            lbl_codigoAlm.Location = new Point(25, 397);
-            lbl_codigoAlm.Name = "lbl_codigoAlm";
-            lbl_codigoAlm.Size = new Size(38, 15);
-            lbl_codigoAlm.TabIndex = 4;
-            lbl_codigoAlm.Text = "label4";
+            lbl_InfoReserva.AutoSize = true;
+            lbl_InfoReserva.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl_InfoReserva.ForeColor = Color.Black;
+            lbl_InfoReserva.Location = new Point(99, 173);
+            lbl_InfoReserva.Name = "lbl_InfoReserva";
+            lbl_InfoReserva.Size = new Size(322, 84);
+            lbl_InfoReserva.TabIndex = 9;
+            lbl_InfoReserva.Text = "$\"📅 {tipoComida}\\n\" +\r\n$\"📆 Fecha: {reserva.fecha_reserva}\\n\" +\r\n$\"📝 Estado: {GetEstadoReserva(reserva\r\n$\"⏱ Registro: {reserva.fecha_registro}\";";
             // 
-            // pictureBox1
+            // btnCodigoReserva
             // 
-            pictureBox1.BackColor = Color.Transparent;
-            pictureBox1.Image = Properties.Resources.QR;
-            pictureBox1.Location = new Point(25, 87);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(242, 242);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 3;
-            pictureBox1.TabStop = false;
+            btnCodigoReserva.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCodigoReserva.ForeColor = Color.Black;
+            btnCodigoReserva.Location = new Point(146, 404);
+            btnCodigoReserva.Name = "btnCodigoReserva";
+            btnCodigoReserva.Size = new Size(192, 38);
+            btnCodigoReserva.TabIndex = 4;
+            btnCodigoReserva.Text = "button1";
+            btnCodigoReserva.UseVisualStyleBackColor = true;
+            btnCodigoReserva.Click += btnCodigoReserva_Click_1;
             // 
-            // lbl_codigoDes
+            // lblCodigoReserva
             // 
-            lbl_codigoDes.AutoSize = true;
-            lbl_codigoDes.ForeColor = Color.Black;
-            lbl_codigoDes.Location = new Point(25, 355);
-            lbl_codigoDes.Name = "lbl_codigoDes";
-            lbl_codigoDes.Size = new Size(102, 15);
-            lbl_codigoDes.TabIndex = 2;
-            lbl_codigoDes.Text = "lbl_codigoReserva";
+            lblCodigoReserva.AutoSize = true;
+            lblCodigoReserva.ForeColor = Color.Black;
+            lblCodigoReserva.Location = new Point(25, 362);
+            lblCodigoReserva.Name = "lblCodigoReserva";
+            lblCodigoReserva.Size = new Size(102, 15);
+            lblCodigoReserva.TabIndex = 2;
+            lblCodigoReserva.Text = "lbl_codigoReserva";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
             label3.ForeColor = Color.Black;
-            label3.Location = new Point(25, 51);
+            label3.Location = new Point(111, 42);
             label3.Name = "label3";
-            label3.Size = new Size(65, 21);
+            label3.Size = new Size(288, 74);
             label3.TabIndex = 1;
-            label3.Text = "Código";
+            label3.Text = "Mi código de reserva\r\n::::::::::::::::::::::::::::::::::::::";
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.BackColor = Color.Transparent;
             label2.ForeColor = SystemColors.ControlDarkDark;
-            label2.Location = new Point(25, 20);
+            label2.Location = new Point(25, 329);
             label2.Name = "label2";
             label2.Size = new Size(249, 15);
             label2.TabIndex = 0;
             label2.Text = "Muestra este codigo al ingreso del restaurante";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.Transparent;
+            pictureBox1.Image = Properties.Resources.QR;
+            pictureBox1.Location = new Point(594, 153);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(361, 341);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
             // 
             // UC_MiCodigo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel2);
+            Controls.Add(pictureBox1);
             Controls.Add(panel1);
             Name = "UC_MiCodigo";
-            Size = new Size(937, 600);
+            Size = new Size(972, 604);
             Load += UC_MiCodigo_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -153,10 +168,11 @@
         private Panel panel1;
         private Label label1;
         private Panel panel2;
-        private Label lbl_codigoDes;
+        private Label lblCodigoReserva;
         private Label label3;
         private Label label2;
         private PictureBox pictureBox1;
-        private Label lbl_codigoAlm;
+        private Button btnCodigoReserva;
+        private Label lbl_InfoReserva;
     }
 }

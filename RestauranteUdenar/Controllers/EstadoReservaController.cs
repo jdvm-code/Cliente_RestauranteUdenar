@@ -1,7 +1,11 @@
-﻿using RestauranteUdenar.Repository;
+﻿using RestauranteUdenar.Models;
+using RestauranteUdenar.Repository;
+using RestauranteUdenar.Responses;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RestauranteUdenar.Controllers
 {
@@ -14,61 +18,39 @@ namespace RestauranteUdenar.Controllers
             _estadoReservaRepository = new EstadoReservaRepository();
         }
 
-        public async Task<(bool exito, string mensaje)> StoreEstadoReservaAsync(string status) 
+        public async Task<ApiResponse<List<EstadoReserva>>> GetEstadosAsync()
         {
             try
             {
-                var json = await _estadoReservaRepository.StoreEstadoReservaAsync(status);
-                var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EstadoReservaResponse>(json);
-                return (true, "Estado de reserva creado exitosamente");
+                var response = await _estadoReservaRepository.GetEstadosAsync();
+
+                if (response == null)
+                {
+                    return new ApiResponse<List< EstadoReserva >>
+                    {
+                        success = false,
+                        message = "Respuesta vacía",
+                        data = null,
+                        error = "No se recibió respuesta"
+                    }
+                    ;
+                }
+
+                return response;
             }
             catch (Exception ex)
             {
-                return (false, ex.Message);
+                return new ApiResponse<List< EstadoReserva >>
+                {
+                    success = false,
+                    message = "Error al obtener estados",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
             }
         }
 
-        public async Task<(bool exito, string mensaje, List<Models.EstadoReserva> estados)> GetEstadoReservaAsync()
-        {
-            try
-            {
-                var json = await _estadoReservaRepository.GetEstadosReservaAsync();
-                var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.EstadoReserva>>(json);
-                return (true, "Estados de reserva obtenidos exitosamente", response);
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message, null);
-            }
-        }
 
-        public async Task<(bool exito, string mensaje)> UpdateEstadoReservaAsync(int id, string status)
-        {
-            try
-            {
-                var json = await _estadoReservaRepository.UpdateEstadoReservaAsync(id, status);
-                var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EstadoReservaResponse>(json);
-                return (true, "Estado de reserva actualizado exitosamente");
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
-
-        public async Task<(bool exito, string mensaje)> DeleteEstadoReservaAsync(int id)
-        {
-            try
-            {
-                var json = await _estadoReservaRepository.DeleteEstadoReservaAsync(id);
-                var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EstadoReservaResponse>(json);
-                return (true, "Estado de reserva eliminado exitosamente");
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
-
-    }
+    } 
 }

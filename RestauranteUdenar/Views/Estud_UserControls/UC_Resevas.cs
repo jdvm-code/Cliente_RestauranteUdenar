@@ -1,4 +1,6 @@
-﻿using RestauranteUdenar.Controllers;
+﻿using RestauranteUdenar.Auxiliares;
+using RestauranteUdenar.Controllers;
+using RestauranteUdenar.Helpers;
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Properties;
 using System;
@@ -17,219 +19,306 @@ namespace RestauranteUdenar.Views.UserControls
         private BecaController _becaController;
         private UsuarioController _usuarioController;
 
+        private List<Reserva> _reservasDelDia = new List<Reserva>();
+
+
+        int userIdSession = int.Parse(TokenStorage.GetUserId());
+
+
         public UC_Resevas()
         {
             InitializeComponent();
+
+            dateTimePicker1.ValueChanged += dateTimePicker1_ValueChanged;
+            combo_comida.SelectedIndexChanged += combo_comida_SelectedIndexChanged;
+
             _horarioController = new HorarioController();
             _comidaController = new ComidaController();
             _reservaController = new ReservaController();
             _becaController = new BecaController();
             _usuarioController = new UsuarioController();
 
-            CargarHorariosAsync();
-            CargarComidasAsync();
+            CargarHorarios();
+            CargarComidas();
 
 
-            int userId = int.Parse(TokenStorage.GetUserId());
-            label3.Text = $"Usuario ID: {userId}";
+            label3.Text = $"Usuario ID: {userIdSession}";
         }
-
-        public async Task<int> ObtenerIdRoleAsync()
-        {
-            var json = await _usuarioController.meAsync();
-            var response = JsonSerializer.Deserialize<Usuario>(json);
-            return response.role_id;
-        }
-
         private async void UC_Resevas_Load(object sender, EventArgs e)
         {
-            CargarHorariosAsync();
+
         }
         private async void btn_ConfirmarReserva_Click_1(object sender, EventArgs e)
         {
-            await hacerReservaAsync();
+            CrearReserva();
+
         }
 
-        private async void CargarHorariosAsync()
+        public async void CrearReserva()
         {
             try
             {
-                var resultado = await _horarioController.GetHorariosAsync();
+                var becaResponse = await _becaController.GetBecaActivaByUsuarioAsync(userIdSession);
 
-                if (!resultado.exito)
+                if (!becaResponse.success || becaResponse.data == null)
                 {
-                    MessageBox.Show(resultado.mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No tiene beca activa para hacer reservas", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                combo_horarios.Items.Clear();
+                int becaId = becaResponse.data.id;
 
-                if (resultado.horarios == null || resultado.horarios.Count == 0)
-                {
-                    MessageBox.Show("No hay horarios disponibles");
-                    return;
-                }
+                var horarioItem = (ComboHorarioItem)combo_horarios.SelectedItem;
+                var comidaItem = (ComboComidaItem)combo_comida.SelectedItem;
 
-                foreach (var horario in resultado.horarios)
+                //Verificar reservas existentes antes de enviar
+                string fecha = dateTimePicker1.Value.ToString("yyyy-MM-dd");
+                var reservasExistentes = await _reservaController.GetReservasByUsuarioYFechaAsync(userIdSession, fecha);
+
+                if (reservasExistentes.success && reservasExistentes.data != null)
                 {
-                    var item = new ComboBoxItem
+                    // Verificar límite de 2 reservas por día
+                    if (reservasExistentes.data.Count >= 2)
                     {
-                        Display = $"{horario.hora_inicio} - {horario.hora_fin}",
-                        Value = horario.id
-                    };
+                        MessageBox.Show(
+                            "⚠️ Límite de reservas alcanzado\n\n" +
+                            "Ya tiene 2 reservas para el día " + fecha + ":\n" +
+                            "• Desayuno\n" +
+                            "• Almuerzo\n\n" +
+                            "No puede realizar más reservas para esta fecha.",
+                            "Reservas completas",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
 
-                    combo_horarios.Items.Add(item);
-                }
-
-                if (combo_horarios.Items.Count > 0)
-                {
-                    combo_horarios.SelectedIndex = 0;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show($"Error cargando horarios: {ex.Message}");
-            }
-        }
-
-        private async void CargarComidasAsync()
-        {
-            try
-            {
-                var resultado = await _comidaController.GetComidaAsync();
-
-                if (!resultado.exito)
-                {
-                    MessageBox.Show(resultado.mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                combo_comida.Items.Clear();
-
-                if (resultado.comidas == null || resultado.comidas.Count == 0)
-                {
-                    MessageBox.Show("No hay comidas disponibles");
-                    return;
-                }
-
-                foreach (var comida in resultado.comidas)
-                {
-                    var item = new ComboBoxItem
+                    // Verificar si ya tiene este tipo de comida
+                    bool yaTieneEstaComida = reservasExistentes.data.Any(r => r.comidas_id == comidaItem.Id);
+                    if (yaTieneEstaComida)
                     {
-                        Display = comida.tipo,
-                        Value = comida.id
-                    };
-
-                    combo_comida.Items.Add(item);
+                        string tipoComida = comidaItem.Id == 1 ? "desayuno" : "almuerzo";
+                        MessageBox.Show(
+                            "⚠️ Reserva duplicada\n\n" +
+                            "Ya tiene una reserva de " + tipoComida + " para el día " + fecha + ".\n\n" +
+                            "Solo puede reservar una vez por desayuno y una por almuerzo.",
+                            "Tipo de comida ya reservado",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
                 }
 
-                if (combo_comida.Items.Count > 0)
+                // Crear objeto reserva
+                var reserva = new
                 {
-                    combo_comida.SelectedIndex = 0;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show($"Error cargando comidas: {ex.Message}");
-            }
-        }
-        public async Task<int> ObtenerBecaUsuarioAsync()
-        {
-            int userId = int.Parse(TokenStorage.GetUserId());
-
-            var resultado = await _becaController.GetBecaByUserIdAsync(userId);
-            if (resultado.exito && resultado.beca != null)
-            {
-                return resultado.beca.id;
-            }
-            return 0;
-        }
-
-        private async Task hacerReservaAsync()
-        {
-            try
-            {
-                if (combo_horarios.Items.Count == 0)
-                {
-                    MessageBox.Show("No hay horarios cargados. Espere a que se carguen.",
-                        "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (combo_comida.Items.Count == 0)
-                {
-                    MessageBox.Show("No hay comidas cargadas. Espere a que se carguen.",
-                        "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                var itemHorario = combo_horarios.SelectedItem as ComboBoxItem;
-                if (itemHorario == null || combo_horarios.SelectedIndex < 0)
-                {
-                    MessageBox.Show("Por favor seleccione un horario",
-                        "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                var itemComida = combo_comida.SelectedItem as ComboBoxItem;
-                if (itemComida == null || combo_comida.SelectedIndex < 0)
-                {
-                    MessageBox.Show("Por favor seleccione una comida",
-                        "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                string userIdStr = TokenStorage.GetUserId();
-                if (string.IsNullOrEmpty(userIdStr))
-                {
-                    MessageBox.Show("No se encontró el ID de usuario. Inicie sesión nuevamente.",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                if (!int.TryParse(userIdStr, out int userId))
-                {
-                    MessageBox.Show("El ID de usuario no es válido.",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                string fechaRegistro = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");   
-                string fechaReserva = dateTimePicker1.Value.ToString("yyyy-MM-dd");
-
-                var request = new ReservaRequest
-                {
-                    becas_id = userId,
-                    horarios_id = itemHorario.Value,
-                    comidas_id = itemComida.Value,
+                    becas_id = becaId,
+                    horarios_id = horarioItem.Id,
+                    comidas_id = comidaItem.Id,
                     estados_reservas_id = 1,
-                    fecha_registro = fechaRegistro,    
-                    fecha_reserva = fechaReserva        
+                    fecha_registro = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    fecha_reserva = fecha
                 };
 
-                var resultado = await _reservaController.StoreReservaAsync(request);
+                //Enviar a la API
+                var response = await _reservaController.CrearReservaAsync(reserva);
 
-                if (resultado.exito)
+                if (response.success)
                 {
-                    MessageBox.Show("Reserva creada exitosamente", "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Opcional: limpiar selección o recargar datos
-                    // combo_horarios.SelectedIndex = -1;
-                    // combo_comida.SelectedIndex = -1;
+                    MessageBox.Show(
+                        "✅ Reserva creada exitosamente\n\n" +
+                        "Código: " + response.data.codigo + "\n" +
+                        "Fecha: " + response.data.fecha_reserva + "\n" +
+                        "Estado: Pendiente",
+                        "Reserva confirmada",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
                 else
                 {
-                    MessageBox.Show(resultado.mensaje, "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Mensajes personalizados según el error de la API
+                    string mensaje = response.error ?? response.message;
+
+                    if (mensaje.Contains("2 reservas") || mensaje.Contains("Límite de reservas"))
+                    {
+                        MessageBox.Show(
+                            "⚠️ Límite de reservas alcanzado\n\n" +
+                            "Ya tiene 2 reservas para este día (desayuno y almuerzo).\n" +
+                            "No puede realizar más reservas.",
+                            "Reservas completas",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                    else if (mensaje.Contains("tipo de comida") || mensaje.Contains("ya tiene una reserva"))
+                    {
+                        MessageBox.Show(
+                            "⚠️ Reserva duplicada\n\n" +
+                            "Ya tiene una reserva para este tipo de comida.\n" +
+                            "Solo puede reservar una vez por desayuno y una por almuerzo.",
+                            "Tipo de comida ya reservado",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                    else if (mensaje.Contains("Cupo agotado") || mensaje.Contains("cupo"))
+                    {
+                        MessageBox.Show(
+                            "⚠️ Cupo agotado\n\n" +
+                            "No hay cupos disponibles para este horario.\n" +
+                            "Intente con otro horario o fecha.",
+                            "Sin cupos disponibles",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                    else if (mensaje.Contains("beca") || mensaje.Contains("Beca"))
+                    {
+                        MessageBox.Show(
+                            "⚠️ Problema con la beca\n\n" +
+                            mensaje,
+                            "Error de beca",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            "❌ Error al crear la reserva\n\n" +
+                            mensaje,
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error inesperado: {ex.Message}", "Error",
+                // Errores de conexión o excepciones de C#
+                MessageBox.Show(
+                    "❌ Error de conexión\n\n" +
+                    "No se pudo conectar con el servidor.\n" +
+                    "Detalle: " + ex.Message,
+                    "Error de conexión",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private async void CargarHorarios()
+        {
+            try
+            {
+                var response = await _horarioController.GetHorariosAsync();
+
+                if (response.success && response.data != null)
+                {
+                    var items = response.data.Select(h => new ComboHorarioItem
+                    {
+                        Id = h.id,
+                        Texto = $"{h.hora_inicio} - {h.hora_fin}"
+                    }).ToList();
+
+                    combo_horarios.DataSource = items;
+                    combo_horarios.DisplayMember = "Texto";   // Lo que se muestra
+                    combo_horarios.ValueMember = "Id";// El valor interno (id)
+                }
+                else
+                {
+                    MessageBox.Show(response.error ?? response.message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private async void CargarComidas()
+        {
+            try
+            {
+                var comidaResponse = await _comidaController.GetComidaAsync();
+
+                if (!comidaResponse.success || comidaResponse.data == null)
+                {
+                    MessageBox.Show(comidaResponse.error ?? comidaResponse.message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string fecha = dateTimePicker1.Value.ToString("yyyy-MM-dd");
+                var reservasResponse = await _reservaController.GetReservasByUsuarioYFechaAsync(userIdSession, fecha);
+
+                _reservasDelDia = reservasResponse.success && reservasResponse.data != null
+                    ? reservasResponse.data
+                    : new List<Reserva>();
+
+                var items = comidaResponse.data
+                    .Where(c => !_reservasDelDia.Any(r => r.comidas_id == c.id)) // Solo comidas NO reservadas
+                    .Select(c => new ComboComidaItem
+                    {
+                        Id = c.id,
+                        Texto = c.tipo
+                    })
+                    .ToList();
+
+                combo_comida.DataSource = items;
+                combo_comida.DisplayMember = "Texto";
+                combo_comida.ValueMember = "Id";
+
+                if (items.Count == 0)
+                {
+                    combo_comida.Enabled = false;
+                    btn_ConfirmarReserva.Enabled = false;
+                    lblMensajeReserva.Text = "⚠️ Ya tiene las 2 reservas para el día " + fecha;
+                    lblMensajeReserva.ForeColor = Color.OrangeRed;
+                }
+                else
+                {
+                    combo_comida.Enabled = true;
+                    combo_comida.SelectedIndex = 0;
+                    VerificarReservaExistente();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar comidas: " + ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void combo_comida_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            VerificarReservaExistente();
+        }
+
+        private void VerificarReservaExistente()
+        {
+            if (combo_comida.SelectedItem == null) return;
+
+            var comidaSeleccionada = (ComboComidaItem)combo_comida.SelectedItem;
+            bool yaTieneEstaComida = _reservasDelDia.Any(r => r.comidas_id == comidaSeleccionada.Id);
+
+            if (yaTieneEstaComida)
+            {
+                btn_ConfirmarReserva.Enabled = false;
+                lblMensajeReserva.Text = $"⚠️ Ya tiene reservado {comidaSeleccionada.Texto} para este día";
+                lblMensajeReserva.ForeColor = Color.OrangeRed;
+            }
+            else
+            {
+                btn_ConfirmarReserva.Enabled = true;
+                lblMensajeReserva.Text = $"✅ Puede reservar {comidaSeleccionada.Texto}";
+                lblMensajeReserva.ForeColor = Color.Green;
+            }
+        }
+
+        private async void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            CargarComidas();
+        }
+
+
+
 
 
     }

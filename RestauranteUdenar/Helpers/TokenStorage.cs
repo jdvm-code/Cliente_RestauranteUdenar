@@ -33,11 +33,6 @@ namespace RestauranteUdenar.Properties
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userId"></param>
-            
         public static void SaveUserId(int userId)
         {
             Properties.Settings.Default.UserId = userId;
@@ -64,31 +59,6 @@ namespace RestauranteUdenar.Properties
         {
             throw new NotImplementedException();
         }
-
-        //becas_id
-        private static int? _becasId;
-
-        public static void SaveBecasId(int becasId)
-        {
-            _becasId = becasId;
-        }
-
-        public static int? GetBecasId()
-        {
-            return _becasId;
-        }
-
-        public static bool HasBecasId()
-        {
-            return _becasId.HasValue;
-        }
-
-        public static void ClearBecasId()
-        {
-            _becasId = null;
-        }
-
-
 
     }
 }

@@ -36,7 +36,7 @@ public class UsuarioController
         }
     }
 
-    public async Task<(bool exito, string mensaje)> LoginAsync(string email, string password)
+    public async Task<(bool exito, string mensaje, Usuario usuario)> LoginAsync(string email, string password)
     {
         try
         {
@@ -47,52 +47,26 @@ public class UsuarioController
 
             if (esExitoso)
             {
+                // Guardar token y usuario
                 TokenStorage.SaveToken(response.token);
                 TokenStorage.SaveUserId(response.user.id);
 
-                await ObtenerBecasIdAsync(response.user.id);
+                // Guardar usuario completo en Session
+                Session.seLogueo(response.user, response.token);
 
-                return (true, "Login exitoso");
+                return (true, "Login exitoso", response.user);
             }
             else
             {
-                return (false, response.message);
+                return (false, response.message, null);
             }
         }
         catch (Exception ex)
         {
-            return (false, ex.Message);
+            return (false, ex.Message, null);
         }
     }
 
-    private async Task ObtenerBecasIdAsync(int userId)
-    {
-        try
-        {
-            var (exito, mensaje, beca) = await becaController.GetBecaByUserIdAsync(userId);
-
-            if (exito && beca != null)
-            {
-                TokenStorage.SaveBecasId(beca.id);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al obtener beca: {ex.Message}");
-        }
-    }
-
-    public async Task<string> ObtenerUsuarioPorIdAsync(int userId)
-    {
-        var token = TokenStorage.GetToken();
-        return await _repository.GetUsuarioByIdAsync(userId, token);
-    }
-
-    public async Task<string> ListarUsuariosAsync()
-    {
-        var token = TokenStorage.GetToken();
-        return await _repository.GetUsuariosAsync(token);
-    }
 
     public async Task CerrarSesionAsync()
     {
@@ -113,24 +87,6 @@ public class UsuarioController
         }
     }
 
-    public async Task <string> meAsync()
-    {
-        try
-        {
-            var token = TokenStorage.GetToken();
-            if (!string.IsNullOrEmpty(token))
-            {
-                return await _repository.meAsync(token);
-
-            }
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error en meAsync: {ex.Message}");
-            return null;
-        }
-    }
 
 }
 

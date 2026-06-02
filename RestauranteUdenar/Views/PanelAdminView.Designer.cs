@@ -30,10 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelAdminView));
             pnl_slidebar = new Panel();
-            btn_logoutAdmin = new Button();
-            btn_verificarCodigo = new Button();
-            btn_reportesAdmin = new Button();
-            btn_reservasAdmin = new Button();
+            btnGestionUsuarios = new Button();
+            btnCerrarSesion = new Button();
+            btnVerificarCodigo = new Button();
+            btnGestionBecas = new Button();
+            btnGestionReservas = new Button();
             panel3 = new Panel();
             label5 = new Label();
             lblBienvenida = new Label();
@@ -42,7 +43,8 @@
             label3 = new Label();
             label4 = new Label();
             pictureBox1 = new PictureBox();
-            Fpnl_UC_Controls = new FlowLayoutPanel();
+            panelMain = new Panel();
+            Panel_UC_ControlsAdmin = new Panel();
             panel1 = new Panel();
             label7 = new Label();
             pnl_slidebar.SuspendLayout();
@@ -50,105 +52,126 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            Fpnl_UC_Controls.SuspendLayout();
+            panelMain.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // pnl_slidebar
             // 
             pnl_slidebar.BackColor = Color.FromArgb(0, 150, 64);
-            pnl_slidebar.Controls.Add(btn_logoutAdmin);
-            pnl_slidebar.Controls.Add(btn_verificarCodigo);
-            pnl_slidebar.Controls.Add(btn_reportesAdmin);
-            pnl_slidebar.Controls.Add(btn_reservasAdmin);
+            pnl_slidebar.Controls.Add(btnGestionUsuarios);
+            pnl_slidebar.Controls.Add(btnCerrarSesion);
+            pnl_slidebar.Controls.Add(btnVerificarCodigo);
+            pnl_slidebar.Controls.Add(btnGestionBecas);
+            pnl_slidebar.Controls.Add(btnGestionReservas);
             pnl_slidebar.Controls.Add(panel3);
             pnl_slidebar.Controls.Add(panel2);
             pnl_slidebar.Dock = DockStyle.Left;
             pnl_slidebar.Location = new Point(0, 0);
             pnl_slidebar.Name = "pnl_slidebar";
             pnl_slidebar.Padding = new Padding(5);
-            pnl_slidebar.Size = new Size(250, 564);
+            pnl_slidebar.Size = new Size(250, 563);
             pnl_slidebar.TabIndex = 0;
             // 
-            // btn_logoutAdmin
+            // btnGestionUsuarios
             // 
-            btn_logoutAdmin.BackColor = Color.Transparent;
-            btn_logoutAdmin.Dock = DockStyle.Top;
-            btn_logoutAdmin.FlatAppearance.BorderSize = 0;
-            btn_logoutAdmin.FlatStyle = FlatStyle.Flat;
-            btn_logoutAdmin.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_logoutAdmin.ForeColor = SystemColors.Control;
-            btn_logoutAdmin.Image = (Image)resources.GetObject("btn_logoutAdmin.Image");
-            btn_logoutAdmin.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_logoutAdmin.Location = new Point(5, 281);
-            btn_logoutAdmin.Name = "btn_logoutAdmin";
-            btn_logoutAdmin.Padding = new Padding(15, 10, 15, 10);
-            btn_logoutAdmin.Size = new Size(240, 54);
-            btn_logoutAdmin.TabIndex = 10;
-            btn_logoutAdmin.Text = "Cerrar sesión";
-            btn_logoutAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn_logoutAdmin.UseVisualStyleBackColor = false;
-            btn_logoutAdmin.Click += btn_logoutAdmin_Click;
+            btnGestionUsuarios.BackColor = Color.Transparent;
+            btnGestionUsuarios.Dock = DockStyle.Top;
+            btnGestionUsuarios.FlatAppearance.BorderSize = 0;
+            btnGestionUsuarios.FlatStyle = FlatStyle.Flat;
+            btnGestionUsuarios.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnGestionUsuarios.ForeColor = SystemColors.Control;
+            btnGestionUsuarios.Image = (Image)resources.GetObject("btnGestionUsuarios.Image");
+            btnGestionUsuarios.ImageAlign = ContentAlignment.MiddleLeft;
+            btnGestionUsuarios.Location = new Point(5, 281);
+            btnGestionUsuarios.Name = "btnGestionUsuarios";
+            btnGestionUsuarios.Padding = new Padding(15, 10, 15, 10);
+            btnGestionUsuarios.Size = new Size(240, 54);
+            btnGestionUsuarios.TabIndex = 12;
+            btnGestionUsuarios.Text = "Gestionar Usuarios";
+            btnGestionUsuarios.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnGestionUsuarios.UseVisualStyleBackColor = false;
+            btnGestionUsuarios.Click += btnGestionUsuarios_Click;
             // 
-            // btn_verificarCodigo
+            // btnCerrarSesion
             // 
-            btn_verificarCodigo.BackColor = Color.Transparent;
-            btn_verificarCodigo.Dock = DockStyle.Top;
-            btn_verificarCodigo.FlatAppearance.BorderSize = 0;
-            btn_verificarCodigo.FlatStyle = FlatStyle.Flat;
-            btn_verificarCodigo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_verificarCodigo.ForeColor = SystemColors.Control;
-            btn_verificarCodigo.Image = (Image)resources.GetObject("btn_verificarCodigo.Image");
-            btn_verificarCodigo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_verificarCodigo.Location = new Point(5, 227);
-            btn_verificarCodigo.Name = "btn_verificarCodigo";
-            btn_verificarCodigo.Padding = new Padding(15, 10, 15, 10);
-            btn_verificarCodigo.Size = new Size(240, 54);
-            btn_verificarCodigo.TabIndex = 9;
-            btn_verificarCodigo.Text = "Verificar Código";
-            btn_verificarCodigo.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn_verificarCodigo.UseVisualStyleBackColor = false;
-            btn_verificarCodigo.Click += btn_verificarCodigo_Click;
+            btnCerrarSesion.BackColor = Color.Transparent;
+            btnCerrarSesion.Dock = DockStyle.Bottom;
+            btnCerrarSesion.FlatAppearance.BorderSize = 0;
+            btnCerrarSesion.FlatStyle = FlatStyle.Flat;
+            btnCerrarSesion.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCerrarSesion.ForeColor = SystemColors.Control;
+            btnCerrarSesion.Image = (Image)resources.GetObject("btnCerrarSesion.Image");
+            btnCerrarSesion.ImageAlign = ContentAlignment.MiddleLeft;
+            btnCerrarSesion.Location = new Point(5, 504);
+            btnCerrarSesion.Name = "btnCerrarSesion";
+            btnCerrarSesion.Padding = new Padding(15, 10, 15, 10);
+            btnCerrarSesion.Size = new Size(240, 54);
+            btnCerrarSesion.TabIndex = 11;
+            btnCerrarSesion.Text = "Cerrar sesión";
+            btnCerrarSesion.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnCerrarSesion.UseVisualStyleBackColor = false;
+            btnCerrarSesion.Click += btnCerrarSesion_Click;
             // 
-            // btn_reportesAdmin
+            // btnVerificarCodigo
             // 
-            btn_reportesAdmin.BackColor = Color.Transparent;
-            btn_reportesAdmin.Dock = DockStyle.Top;
-            btn_reportesAdmin.FlatAppearance.BorderSize = 0;
-            btn_reportesAdmin.FlatStyle = FlatStyle.Flat;
-            btn_reportesAdmin.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_reportesAdmin.ForeColor = SystemColors.Control;
-            btn_reportesAdmin.Image = (Image)resources.GetObject("btn_reportesAdmin.Image");
-            btn_reportesAdmin.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_reportesAdmin.Location = new Point(5, 173);
-            btn_reportesAdmin.Name = "btn_reportesAdmin";
-            btn_reportesAdmin.Padding = new Padding(15, 10, 15, 10);
-            btn_reportesAdmin.Size = new Size(240, 54);
-            btn_reportesAdmin.TabIndex = 8;
-            btn_reportesAdmin.Text = "Reportes";
-            btn_reportesAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn_reportesAdmin.UseVisualStyleBackColor = false;
-            btn_reportesAdmin.Click += btn_reportesAdmin_Click;
+            btnVerificarCodigo.BackColor = Color.Transparent;
+            btnVerificarCodigo.Dock = DockStyle.Top;
+            btnVerificarCodigo.FlatAppearance.BorderSize = 0;
+            btnVerificarCodigo.FlatStyle = FlatStyle.Flat;
+            btnVerificarCodigo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnVerificarCodigo.ForeColor = SystemColors.Control;
+            btnVerificarCodigo.Image = (Image)resources.GetObject("btnVerificarCodigo.Image");
+            btnVerificarCodigo.ImageAlign = ContentAlignment.MiddleLeft;
+            btnVerificarCodigo.Location = new Point(5, 227);
+            btnVerificarCodigo.Name = "btnVerificarCodigo";
+            btnVerificarCodigo.Padding = new Padding(15, 10, 15, 10);
+            btnVerificarCodigo.Size = new Size(240, 54);
+            btnVerificarCodigo.TabIndex = 9;
+            btnVerificarCodigo.Text = "Verificar Código";
+            btnVerificarCodigo.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnVerificarCodigo.UseVisualStyleBackColor = false;
+            btnVerificarCodigo.Click += btnVerificarCodigo_Click;
             // 
-            // btn_reservasAdmin
+            // btnGestionBecas
             // 
-            btn_reservasAdmin.BackColor = Color.Transparent;
-            btn_reservasAdmin.Dock = DockStyle.Top;
-            btn_reservasAdmin.FlatAppearance.BorderSize = 0;
-            btn_reservasAdmin.FlatStyle = FlatStyle.Flat;
-            btn_reservasAdmin.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_reservasAdmin.ForeColor = SystemColors.Control;
-            btn_reservasAdmin.Image = (Image)resources.GetObject("btn_reservasAdmin.Image");
-            btn_reservasAdmin.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_reservasAdmin.Location = new Point(5, 119);
-            btn_reservasAdmin.Name = "btn_reservasAdmin";
-            btn_reservasAdmin.Padding = new Padding(15, 10, 15, 10);
-            btn_reservasAdmin.Size = new Size(240, 54);
-            btn_reservasAdmin.TabIndex = 7;
-            btn_reservasAdmin.Text = "Gestión Reservas";
-            btn_reservasAdmin.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btn_reservasAdmin.UseVisualStyleBackColor = false;
-            btn_reservasAdmin.Click += btn_reservasAdmin_Click;
+            btnGestionBecas.BackColor = Color.Transparent;
+            btnGestionBecas.Dock = DockStyle.Top;
+            btnGestionBecas.FlatAppearance.BorderSize = 0;
+            btnGestionBecas.FlatStyle = FlatStyle.Flat;
+            btnGestionBecas.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnGestionBecas.ForeColor = SystemColors.Control;
+            btnGestionBecas.Image = (Image)resources.GetObject("btnGestionBecas.Image");
+            btnGestionBecas.ImageAlign = ContentAlignment.MiddleLeft;
+            btnGestionBecas.Location = new Point(5, 173);
+            btnGestionBecas.Name = "btnGestionBecas";
+            btnGestionBecas.Padding = new Padding(15, 10, 15, 10);
+            btnGestionBecas.Size = new Size(240, 54);
+            btnGestionBecas.TabIndex = 8;
+            btnGestionBecas.Text = "Gestion Becas";
+            btnGestionBecas.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnGestionBecas.UseVisualStyleBackColor = false;
+            btnGestionBecas.Click += btnGestionBecas_Click;
+            // 
+            // btnGestionReservas
+            // 
+            btnGestionReservas.BackColor = Color.Transparent;
+            btnGestionReservas.Dock = DockStyle.Top;
+            btnGestionReservas.FlatAppearance.BorderSize = 0;
+            btnGestionReservas.FlatStyle = FlatStyle.Flat;
+            btnGestionReservas.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnGestionReservas.ForeColor = SystemColors.Control;
+            btnGestionReservas.Image = (Image)resources.GetObject("btnGestionReservas.Image");
+            btnGestionReservas.ImageAlign = ContentAlignment.MiddleLeft;
+            btnGestionReservas.Location = new Point(5, 119);
+            btnGestionReservas.Name = "btnGestionReservas";
+            btnGestionReservas.Padding = new Padding(15, 10, 15, 10);
+            btnGestionReservas.Size = new Size(240, 54);
+            btnGestionReservas.TabIndex = 7;
+            btnGestionReservas.Text = "Gestión Reservas";
+            btnGestionReservas.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnGestionReservas.UseVisualStyleBackColor = false;
+            btnGestionReservas.Click += btnGestionReservas_Click;
             // 
             // panel3
             // 
@@ -242,24 +265,34 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // Fpnl_UC_Controls
+            // panelMain
             // 
-            Fpnl_UC_Controls.Controls.Add(panel1);
-            Fpnl_UC_Controls.Dock = DockStyle.Fill;
-            Fpnl_UC_Controls.Location = new Point(250, 0);
-            Fpnl_UC_Controls.Name = "Fpnl_UC_Controls";
-            Fpnl_UC_Controls.Size = new Size(771, 564);
-            Fpnl_UC_Controls.TabIndex = 1;
+            panelMain.Controls.Add(Panel_UC_ControlsAdmin);
+            panelMain.Controls.Add(panel1);
+            panelMain.Dock = DockStyle.Fill;
+            panelMain.Location = new Point(250, 0);
+            panelMain.Name = "panelMain";
+            panelMain.Size = new Size(706, 563);
+            panelMain.TabIndex = 2;
+            // 
+            // Panel_UC_ControlsAdmin
+            // 
+            Panel_UC_ControlsAdmin.BackColor = Color.FromArgb(245, 247, 250);
+            Panel_UC_ControlsAdmin.Dock = DockStyle.Fill;
+            Panel_UC_ControlsAdmin.Location = new Point(0, 44);
+            Panel_UC_ControlsAdmin.Name = "Panel_UC_ControlsAdmin";
+            Panel_UC_ControlsAdmin.Size = new Size(706, 519);
+            Panel_UC_ControlsAdmin.TabIndex = 1;
             // 
             // panel1
             // 
             panel1.Controls.Add(label7);
             panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(3, 3);
+            panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(10);
-            panel1.Size = new Size(647, 44);
-            panel1.TabIndex = 1;
+            panel1.Size = new Size(706, 44);
+            panel1.TabIndex = 0;
             // 
             // label7
             // 
@@ -269,20 +302,22 @@
             label7.ForeColor = Color.FromArgb(10, 25, 47);
             label7.Location = new Point(10, 10);
             label7.Name = "label7";
-            label7.Size = new Size(153, 25);
+            label7.Size = new Size(179, 25);
             label7.TabIndex = 1;
-            label7.Text = "Panel Estudiante";
+            label7.Text = "Panel Administador";
             // 
             // PanelAdminView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 247, 250);
-            ClientSize = new Size(1021, 564);
-            Controls.Add(Fpnl_UC_Controls);
+            ClientSize = new Size(956, 563);
+            Controls.Add(panelMain);
             Controls.Add(pnl_slidebar);
             Name = "PanelAdminView";
-            Text = "PanelAdminView";
+            Text = "Panel Administradores";
+            FormClosing += PanelAdminView_FormClosing;
+            Load += PanelAdminView_Load;
             pnl_slidebar.ResumeLayout(false);
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
@@ -290,7 +325,7 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            Fpnl_UC_Controls.ResumeLayout(false);
+            panelMain.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
@@ -299,7 +334,6 @@
         #endregion
 
         private Panel pnl_slidebar;
-        private FlowLayoutPanel Fpnl_UC_Controls;
         private Panel panel3;
         private Label label5;
         private Label lblBienvenida;
@@ -308,10 +342,13 @@
         private Label label3;
         private Label label4;
         private PictureBox pictureBox1;
-        private Button btn_logoutAdmin;
-        private Button btn_verificarCodigo;
-        private Button btn_reportesAdmin;
-        private Button btn_reservasAdmin;
+        private Button btnVerificarCodigo;
+        private Button btnGestionBecas;
+        private Button btnGestionReservas;
+        private Button btnCerrarSesion;
+        private Button btnGestionUsuarios;
+        private Panel panelMain;
+        private Panel Panel_UC_ControlsAdmin;
         private Panel panel1;
         private Label label7;
     }

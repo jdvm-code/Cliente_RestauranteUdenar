@@ -11,7 +11,6 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
-using static System.Collections.Specialized.BitVector32;
 
 namespace RestauranteUdenar.Views
 {
@@ -25,54 +24,46 @@ namespace RestauranteUdenar.Views
             _controller = new UsuarioController();
             var token = TokenStorage.GetToken();
 
-            txtEmail.Text = "juan.perez@udenar.edu.co";
-            txtPassword.Text = "123456789123456";
-            ValidarRol();
+            txtEmail.Text = "Juancho@udenar.com";
+            //jdvm@gmail.com
+            txtPassword.Text = "123";
 
-        }
-
-        public async Task<string> ValidarRol()
-        {
-            int userId = int.Parse(TokenStorage.GetUserId());
-            string message = $"Usuario ID: {userId}";
-            return message;
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             string email = txtEmail.Text;
             string password = txtPassword.Text;
-            await _controller.LoginAsync(email, password);
-            {
-                (bool exito, string mensaje) = await _controller.LoginAsync(email, password);
-                if (exito)
-                {
-                    int roleId = await ObtenerIdRoleAsync();
 
-                    MessageBox.Show($" numero de rol {roleId}");
-                    if (roleId == 2)
-                    {
-                        Form vista = new PanelAdminView();
-                        vista.Show();
-                        this.Hide();
-                    }
-                    else if (roleId != 2)
-                    {
-                        Form vista = new PanelBecasView();
-                        vista.Show();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Rol no reconocido", "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+            (bool exito, string mensaje, Usuario usuario) = await _controller.LoginAsync(email, password);
+
+            if (exito && usuario != null)
+            {
+                Form vista;
+
+                if (usuario.role_id == 1)
+                {
+                    vista = new PanelAdminView();      
+                }
+                else if (usuario.role_id == 2)
+                {
+                    vista = new PanelBecasView(); 
                 }
                 else
                 {
-                    MessageBox.Show(mensaje, "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Rol no reconocido: " + usuario.role_id,
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-            }
 
+                vista.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show(mensaje, "Error de autenticación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 
@@ -92,11 +83,5 @@ namespace RestauranteUdenar.Views
         {
         }
 
-        public async Task<int> ObtenerIdRoleAsync()
-        {
-            var json = await _controller.meAsync();
-            var response = JsonSerializer.Deserialize<Usuario>(json);
-            return response.role_id;
-        }
     }
 }

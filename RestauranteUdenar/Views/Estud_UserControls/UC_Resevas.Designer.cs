@@ -41,6 +41,7 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
+            lblMensajeReserva = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -178,11 +179,20 @@
             label2.TabIndex = 9;
             label2.Text = "Horarios";
             // 
+            // lblMensajeReserva
+            // 
+            lblMensajeReserva.AutoSize = true;
+            lblMensajeReserva.Location = new Point(498, 194);
+            lblMensajeReserva.Name = "lblMensajeReserva";
+            lblMensajeReserva.Size = new Size(0, 15);
+            lblMensajeReserva.TabIndex = 10;
+            // 
             // UC_Resevas
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 247, 250);
+            Controls.Add(lblMensajeReserva);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "UC_Resevas";
@@ -192,6 +202,7 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -209,5 +220,6 @@
         private Label label2;
         private DateTimePicker dateTimePicker1;
         private Label label6;
+        private Label lblMensajeReserva;
     }
 }

@@ -1,4 +1,6 @@
-﻿using RestauranteUdenar.Repository;
+﻿using RestauranteUdenar.Models;
+using RestauranteUdenar.Repository;
+using RestauranteUdenar.Responses;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,60 +16,38 @@ namespace RestauranteUdenar.Controllers
             _comidaRepository = new ComidaRepository();
         }
 
-
-        public async Task<(bool exito, string mensaje)> StoreComidaAsync(string status)
+        public async Task<ApiResponse<List<Comida>>> GetComidaAsync()
         {
             try
             {
-                var json = await _comidaRepository.StoreComidaAsync(status);
-                var response = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.ComidaResponse>(json);
-                return (true, "Tipo de comida guardado");
+                var response = await _comidaRepository.GetIndexComidasAsync();
+
+                if (response == null)
+                {
+                    return new ApiResponse<List<Comida>>
+                    {
+                        success = false,
+                        message = "El servidor devolvió una respuesta vacía",
+                        data = null,
+                        error = "Respuesta nula del repositorio"
+                    }
+                    ;
+                }
+                return response;
             }
             catch (Exception ex)
             {
-                return (false, ex.Message);
+                return new ApiResponse<List<Comida>>
+                {
+                    success = false,
+                    message = "Error al obtener comidas",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
             }
         }
 
-        public async Task<(bool exito, string mensaje, List<Models.Comida> comidas)> GetComidaAsync()
-        {
-            try
-            {
-                var json = await _comidaRepository.GetComidaAsync();
-                var response = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Models.Comida>>(json);
-                return (true, "Tipos de comida obtenidos", response);
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message, null);
-            }
 
-        }
-
-        public async Task<(bool exito, string mensaje)> DeleteComidaAsync(string tipo)
-        {
-            try
-            {
-                _comidaRepository.DeleteComida(tipo);
-                return (true, "Tipo de comida eliminado");
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
-
-        public async Task<(bool exito, string mensaje)> UpdateComidaAsync(string tipo, string newTipo)
-        {
-            try
-            {
-                _comidaRepository.UpdateComida(tipo, newTipo);
-                return (true, "Tipo de comida actualizado");
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
     }
 }

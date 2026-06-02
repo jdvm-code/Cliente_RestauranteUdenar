@@ -39,49 +39,6 @@ namespace RestauranteUdenar.Repository
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> GetUsuariosAsync(string token)
-        {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            return await _client.GetStringAsync($"{_baseUrl}/usuarios");
-        }
-
-        public async Task<string> GetUsuarioByIdAsync(int id, string token)
-        {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            return await _client.GetStringAsync($"{_baseUrl}/find/{id}");
-        }
-
-        public async Task<string> UpdateUsuarioAsync(int id, Usuario usuario, string token)
-        {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            var json = JsonSerializer.Serialize(usuario);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_baseUrl}/usuarios/{id}", content);
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        //cambiar contraseña
-        public async Task<string> CambiarPasswordAsync(string passwordActual, string passwordNuevo, string token)
-        {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            var body = new { password_actual = passwordActual, password = passwordNuevo };
-            var json = JsonSerializer.Serialize(body);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"{_baseUrl}/cambiar-password", content);
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        public async Task<string> meAsync(string token)
-        {
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            return await _client.GetStringAsync($"{_baseUrl}/me");
-        }
-
         public async Task<string> LogoutAsync(string token)
         {
             _client.DefaultRequestHeaders.Authorization =

@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Repository;
+using RestauranteUdenar.Responses;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RestauranteUdenar.Controllers
 {
@@ -17,106 +19,205 @@ namespace RestauranteUdenar.Controllers
             _reservaRepository = new ReservaRepository();
         }
 
-        public ReservaController(ReservaRepository reservaRepository)
-        {
-            if (reservaRepository != null)
-                _reservaRepository = reservaRepository;
-            else
-                _reservaRepository = new ReservaRepository();
-        }
-
-        public async Task<(bool exito, string mensaje)> StoreReservaAsync(ReservaRequest request)
+        public async Task<ApiResponse<List<Reserva>>> GetAllReservasAsync(string fecha = null, int? estado = null, int? comida = null)
         {
             try
             {
-                var json = await _reservaRepository.StoreReservaAsync(request);
-                var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-                bool esExito = response.status == "success";
+                var response = await _reservaRepository.GetAllReservasAsync(fecha, estado, comida);
 
-                return (esExito, response.message);
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
-
-        public async Task<(bool exito, string mensaje, Reserva data)> GetReservaByIdAsync(int id)
-        {
-            try
-            {
-                var json = await _reservaRepository.GetReservaByIdAsync(id);
-                var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-
-                bool esExito = response.status == "success";
-
-                return (esExito, response.message, response.data);
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message, null);
-            }
-        }
-
-
-
-        public async Task<(bool exito, string mensaje)> UpdateReservaAsync(int estados_resevas_id, int id)
-        {
-            try
-            {
-                var json = await _reservaRepository.UpdateReservaAsync(estados_resevas_id, id);
-                var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-                bool esExito = response.status == "success";
-
-                return (esExito, response.message);
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
-
-        public async Task<(bool exito, string mensaje)> VerificarQrAsync(int estados_resevas_id, int id)
-        {
-            try
-            {
-                var json = await _reservaRepository.VerificarQrAsync(estados_resevas_id, id);
-                var response = JsonConvert.DeserializeObject<ReservaResponse>(json);
-                bool esExito = response.status == "success";
-
-                return (esExito, response.message);
-            }
-            catch (Exception ex)
-            {
-                return (false, ex.Message);
-            }
-        }
-
-        public async Task<(bool exito, string mensaje, List<ResevaCodigoResponse> data)> 
-    GetCodigoReservaDia(int becas_id)
-        {
-            try
-            {
-                var json = await _reservaRepository.GetCodigoReservaDia(becas_id);
-
-                // ✅ CORREGIDO: List<<ReservaCodigoResponse> con < > simples
-                var listaCodigos = JsonConvert.DeserializeObject < List < ResevaCodigoResponse >> (json);
-
-                if (listaCodigos == null || listaCodigos.Count == 0)
+                if (response == null)
                 {
-                    return (false, "No hay reservas para hoy", null);
+                    return new ApiResponse<List<Reserva>>
+                    {
+                        success = false,
+                        message = "Respuesta vacía",
+                        data = null,
+                        error = "No se recibió respuesta"
+                    }
+                    ;
                 }
 
-                return (true, $"{listaCodigos.Count} reserva(s) encontrada(s)", listaCodigos);
-            }
-            catch (JsonException ex)
-            {
-                return (false, $"Error al procesar respuesta: {ex.Message}", null);
+                return response;
             }
             catch (Exception ex)
             {
-                return (false, ex.Message, null);
+                return new ApiResponse<List<Reserva>>
+                {
+                    success = false,
+                    message = "Error al obtener reservas",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
+            }
+        }
+
+        public async Task<ApiResponse<Reserva>> ConfirmarReservaAsync(int reservaId)
+        {
+            try
+            {
+                var response = await _reservaRepository.ConfirmarReservaAsync(reservaId);
+
+                if (response == null)
+                {
+                    return new ApiResponse<Reserva>
+                    {
+                        success = false,
+                        message = "Respuesta vacía",
+                        data = null,
+                        error = "No se recibió respuesta"
+                    }
+                    ;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<Reserva>
+                {
+                    success = false,
+                    message = "Error al confirmar",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
+            }
+        }
+
+        public async Task<ApiResponse<Reserva>> CancelarReservaAsync(int reservaId)
+        {
+            try
+            {
+                var response = await _reservaRepository.CancelarReservaAsync(reservaId);
+
+                if (response == null)
+                {
+                    return new ApiResponse<Reserva>
+                    {
+                        success = false,
+                        message = "Respuesta vacía",
+                        data = null,
+                        error = "No se recibió respuesta"
+                    }
+                    ;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<Reserva>
+                {
+                    success = false,
+                    message = "Error al cancelar",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
+            }
+        }
+
+        public async Task<ApiResponse<List<Reserva>>> GetReservasByUsuarioYFechaAsync(int usuarioId, string fecha)
+        {
+            try
+            {
+                var response = await _reservaRepository.GetReservasByUsuarioYFechaAsync(usuarioId, fecha);
+
+                if (response == null)
+                {
+                    return new ApiResponse<List<Reserva>>
+                    {
+                        success = false,
+                        message = "El servidor devolvió una respuesta vacía",
+                        data = null,
+                        error = "Respuesta nula del repositorio"
+                    }
+                    ;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<Reserva>>
+                {
+                    success = false,
+                    message = "Error al obtener reservas",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
+            }
+        }
+
+        public async Task<ApiResponse<Reserva>> CrearReservaAsync(object reservaData)
+        {
+            try
+            {
+                var response = await _reservaRepository.CrearReservaAsync(reservaData);
+
+                if (response == null)
+                {
+                    return new ApiResponse<Reserva>
+                    {
+                        success = false,
+                        message = "El servidor devolvió una respuesta vacía",
+                        data = null,
+                        error = "Respuesta nula del repositorio"
+                    }
+                    ;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<Reserva>
+                {
+                    success = false,
+                    message = "Error al crear la reserva",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
+            }
+        }
+
+        public async Task<ApiResponse<Reserva>> MarcarAsistenciaAsync(string codigo)
+        {
+            try
+            {
+                var response = await _reservaRepository.MarcarAsistenciaAsync(codigo);
+
+                if (response == null)
+                {
+                    return new ApiResponse<Reserva>
+                    {
+                        success = false,
+                        message = "Respuesta vacía",
+                        data = null,
+                        error = "No se recibió respuesta"
+                    }
+                    ;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<Reserva>
+                {
+                    success = false,
+                    message = "Error al marcar asistencia",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
             }
         }
     }
 }
+
+
+

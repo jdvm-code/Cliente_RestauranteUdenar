@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Properties;
+using RestauranteUdenar.Responses;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -30,7 +32,7 @@ namespace RestauranteUdenar.Repository
             }
         }
 
-        public async Task<string> GetHorariosAsync()
+        public async Task<ApiResponse<List<Horario>>> GetIndexAsync()
         {
             try
             {
@@ -48,15 +50,20 @@ namespace RestauranteUdenar.Repository
                     throw new HttpRequestException($"Error {response.StatusCode}: {responseContent}");
                 }
 
-                // 2. Ahora sí coincide: responseContent es un string y el método retorna Task<string>
-                return responseContent;
+                var apiResponse = JsonConvert.DeserializeObject<ApiResponse<List<Horario>>>(responseContent);
+
+                if (apiResponse == null)
+                {
+                    throw new Exception("La respuesta de la API no tiene el formato esperado.");
+                }
+
+                return apiResponse;
             }
             catch (HttpRequestException ex)
             {
                 throw new Exception($"Error de conexión: {ex.Message}");
             }
         }
-
         public async Task<string> StoreHorarioAsync(string hora_inicio, string hora_fin, int cupo)
         {
             AgregarToken();

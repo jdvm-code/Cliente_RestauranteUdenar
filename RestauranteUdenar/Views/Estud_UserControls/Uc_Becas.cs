@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace RestauranteUdenar.Views.Admin_UserControls
+namespace RestauranteUdenar.Views.Estud_UserControls
 {
-    public partial class UC_Reportes : UserControl
+    public partial class Uc_Becas : UserControl
     {
-        public UC_Reportes()
+        public Uc_Becas()
         {
             InitializeComponent();
         }

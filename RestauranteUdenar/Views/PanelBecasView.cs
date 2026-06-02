@@ -1,4 +1,5 @@
-﻿using RestauranteUdenar.Helpers;
+﻿using RestauranteUdenar.Controllers;
+using RestauranteUdenar.Helpers;
 using RestauranteUdenar.Properties;
 using RestauranteUdenar.Views.Estud_UserControls;
 using RestauranteUdenar.Views.UserControls;
@@ -33,6 +34,17 @@ namespace RestauranteUdenar.Views
         // Guardar el botón actualmente activo
         private Button botonActual = null;
 
+
+
+        /// <summary>
+        /// //
+        /// </summary>
+        /// 
+        int userIdSession = int.Parse(TokenStorage.GetUserId());
+
+
+        BecaController _becaController;
+
         public PanelBecasView()
         {
             InitializeComponent();
@@ -41,6 +53,26 @@ namespace RestauranteUdenar.Views
             panelSidebar.BackColor = Color.FromArgb(0, 150, 64);
             panelMain.BackColor = Color.FromArgb(245, 247, 250);
             _controller = new UsuarioController();
+            _becaController = new BecaController();
+        }
+
+
+        private async Task VerificarBecaYMostrarPanel()
+        {
+            var becaResponse = await _becaController.GetBecaActivaByUsuarioAsync(userIdSession);
+
+            if (becaResponse.success && becaResponse.data != null)
+            {
+                // Tiene beca activa - mostrar panel de reservas
+                UC_Resevas vista = new UC_Resevas();
+                MostrarVista(vista);
+            }
+            else
+            {
+                // No tiene beca - mostrar UserControl de solicitud
+                UC_Resevas vista = new UC_Resevas();
+                MostrarVista(vista);
+            }
         }
 
         private void MostrarVista(UserControl vistaFormulario)
@@ -51,11 +83,10 @@ namespace RestauranteUdenar.Views
             Panel_UC_Controls.Controls.Add(vistaFormulario);
         }
 
-        private void PanelBecasView_Load(object sender, EventArgs e)
+        private async void PanelBecasView_Load(object sender, EventArgs e)
         {
-            UC_Resevas vista = new UC_Resevas();
-            MostrarVista(vista);
 
+            await VerificarBecaYMostrarPanel();
             lblBienvenida.Text = $"Usuario: {Session.UsuarioActual?.name}";
 
         }
@@ -75,7 +106,7 @@ namespace RestauranteUdenar.Views
 
         private void btn_cambiarContraseña_Click(object sender, EventArgs e)
         {
-            UC_CambiarContraseña vista = new UC_CambiarContraseña();
+            Uc_SolicitarBeca vista = new Uc_SolicitarBeca();
             MostrarVista(vista);
         }
 
@@ -192,7 +223,20 @@ namespace RestauranteUdenar.Views
 
         private async void PanelBecasView_FormClosing(object sender, FormClosingEventArgs e)
         {
-           Session.CerrarSesion();
+            var resultado = MessageBox.Show(
+                 "¿Estás seguro de que deseas cerrar sesión?",  // mensaje
+                 "Confirmar cierre de sesión",                   // título
+                  MessageBoxButtons.YesNo,                        // ← botones (plural, con S)
+                  MessageBoxIcon.Question                         // ← icono (sin Button)
+            );
+
+            if (resultado == DialogResult.Yes)                // ← DialogResult, no MessageBoxResult
+            {
+                await _controller.CerrarSesionAsync();
+                var login = new LoginView();
+                login.Show();
+                this.Close();
+            }
         }
     }
 }

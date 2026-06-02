@@ -1,6 +1,6 @@
-﻿namespace RestauranteUdenar.Views.Admin_UserControls
+﻿namespace RestauranteUdenar.Views.Estud_UserControls
 {
-    partial class UC_Reportes
+    partial class Uc_Becas
     {
         /// <summary> 
         /// Variable del diseñador necesaria.
@@ -30,7 +30,10 @@
         {
             panel1 = new Panel();
             label1 = new Label();
+            panel2 = new Panel();
+            label2 = new Label();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -41,7 +44,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(10);
-            panel1.Size = new Size(1003, 55);
+            panel1.Size = new Size(958, 55);
             panel1.TabIndex = 7;
             // 
             // label1
@@ -52,19 +55,42 @@
             label1.ForeColor = Color.FromArgb(10, 25, 47);
             label1.Location = new Point(10, 10);
             label1.Name = "label1";
-            label1.Size = new Size(246, 32);
+            label1.Size = new Size(178, 32);
             label1.TabIndex = 0;
-            label1.Text = "Informes y reportes";
+            label1.Text = "Solicitud Beca";
             // 
-            // UC_Reportes
+            // panel2
+            // 
+            panel2.BackColor = Color.Silver;
+            panel2.Controls.Add(label2);
+            panel2.Location = new Point(31, 79);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(309, 478);
+            panel2.TabIndex = 8;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(15, 12);
+            label2.Name = "label2";
+            label2.Size = new Size(90, 21);
+            label2.TabIndex = 9;
+            label2.Text = "Solicitudes";
+            // 
+            // Uc_Becas
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel2);
             Controls.Add(panel1);
-            Name = "UC_Reportes";
-            Size = new Size(1003, 545);
+            Name = "Uc_Becas";
+            Size = new Size(958, 666);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -72,5 +98,7 @@
 
         private Panel panel1;
         private Label label1;
+        private Panel panel2;
+        private Label label2;
     }
 }

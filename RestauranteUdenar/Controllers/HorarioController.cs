@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
 using RestauranteUdenar.Models;
 using RestauranteUdenar.Repository;
+using RestauranteUdenar.Responses;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RestauranteUdenar.Controllers
 {
@@ -16,29 +19,35 @@ namespace RestauranteUdenar.Controllers
             _horarioRepository = new HorarioRepository();
         }
 
-        public async Task<(bool exito, string mensaje, List<Horario> horarios)> GetHorariosAsync()
+        public async Task<ApiResponse<List<Horario>>> GetHorariosAsync()
         {
             try
             {
-                var json = await _horarioRepository.GetHorariosAsync();
+                var response = await _horarioRepository.GetIndexAsync();
 
-                if (string.IsNullOrEmpty(json))
+                if (response == null)
                 {
-                    return (false, "El servidor devolvió una respuesta vacía", null);
+                    return new ApiResponse<List<Horario>>
+                    {
+                        success = false,
+                        message = "El servidor devolvió una respuesta vacía",
+                        data = null,
+                        error = "Respuesta nula del repositorio"
+                    }
+                    ;
                 }
-
-                var horarios = JsonConvert.DeserializeObject<List<Horario>>(json);
-
-                if (horarios == null)
-                {
-                    return (false, "No se pudieron deserializar los horarios", null);
-                }
-
-                return (true, "Horarios obtenidos exitosamente", horarios);
+                return response;
             }
             catch (Exception ex)
             {
-                return (false, ex.Message, null);
+                return new ApiResponse<List<Horario>>
+                {
+                    success = false,
+                    message = "Error al obtener horarios",
+                    data = null,
+                    error = ex.Message
+                }
+                ;
             }
         }
     }

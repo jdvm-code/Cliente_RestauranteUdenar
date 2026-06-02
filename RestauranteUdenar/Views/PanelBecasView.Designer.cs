@@ -74,14 +74,14 @@
             // btn_cerrarSesion
             // 
             btn_cerrarSesion.BackColor = Color.Transparent;
-            btn_cerrarSesion.Dock = DockStyle.Top;
+            btn_cerrarSesion.Dock = DockStyle.Bottom;
             btn_cerrarSesion.FlatAppearance.BorderSize = 0;
             btn_cerrarSesion.FlatStyle = FlatStyle.Flat;
             btn_cerrarSesion.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btn_cerrarSesion.ForeColor = SystemColors.Control;
             btn_cerrarSesion.Image = (Image)resources.GetObject("btn_cerrarSesion.Image");
             btn_cerrarSesion.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_cerrarSesion.Location = new Point(5, 281);
+            btn_cerrarSesion.Location = new Point(5, 413);
             btn_cerrarSesion.Name = "btn_cerrarSesion";
             btn_cerrarSesion.Padding = new Padding(15, 10, 15, 10);
             btn_cerrarSesion.Size = new Size(240, 54);
@@ -106,7 +106,7 @@
             btn_cambiarContraseña.Padding = new Padding(15, 10, 15, 10);
             btn_cambiarContraseña.Size = new Size(240, 54);
             btn_cambiarContraseña.TabIndex = 7;
-            btn_cambiarContraseña.Text = "Cambiar contraseña";
+            btn_cambiarContraseña.Text = "Solicitar Beca";
             btn_cambiarContraseña.TextImageRelation = TextImageRelation.ImageBeforeText;
             btn_cambiarContraseña.UseVisualStyleBackColor = false;
             btn_cambiarContraseña.Click += btn_cambiarContraseña_Click;
